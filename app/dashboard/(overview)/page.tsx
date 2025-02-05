@@ -9,7 +9,7 @@ export default function Page() {
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Dashboard
+        Welcome
       </h1>
 
       {/* Card Section */}
@@ -20,14 +20,14 @@ export default function Page() {
       </div>
 
       {/* Charts & Invoices Section */}
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+      {/* <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
         <Suspense fallback={<RevenueChartSkeleton />}>
           <RevenueChart />
         </Suspense>
         <Suspense fallback={<LatestInvoicesSkeleton />}>
           <LatestInvoices />
         </Suspense>
-      </div>
+      </div> */}
     </main>
   );
 }

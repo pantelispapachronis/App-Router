@@ -15,7 +15,7 @@ export default function Page() {
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
         <div className={styles.shape} />
           <p className={'${lusitana.className} text-lg text-gray-800 md:text-3xl md:leading-normal'}>
-            <strong>Welcome to aerOS.</strong> This is a Demo Web App, made by
+            <strong>Welcome to aerOS.</strong> <br /> Energy Efficient, Health Safe & Sustainable Smart Buildings, made by
             {' '}
             <Link href="https://www.infolysis.gr" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
               INFOLYSiS
@@ -29,7 +29,7 @@ export default function Page() {
           </Link>
         </div>
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* Add Hero Images Here */}
+          {/* Add aerOS Images Here */}
           <Image
             src="/aeros.png"
             width={1000}
