@@ -16,6 +16,20 @@ const users = [
   },
 ];
 
+const preferences = [
+  {
+    user_id: users[0].id,
+    desk1: '',
+    desk2: '',
+    desk3: '',
+  },
+  {
+    user_id: users[1].id,
+    desk1: '',
+    desk2: '',
+    desk3: '',
+  }
+]
 const customers = [
   {
     id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',

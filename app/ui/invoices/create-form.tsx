@@ -2,24 +2,61 @@
 
 import { CustomerField } from '@/app/lib/definitions';
 import Link from 'next/link';
-import {
-  ComputerDesktopIcon,
-  CheckIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-} from '@heroicons/react/24/outline';
+import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createInvoice, State } from '@/app/lib/actions';
 import { useActionState } from 'react';
 import { useState } from 'react';
+import React, { useRef } from 'react';
 
 export default function Form() {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createInvoice, initialState);
-  const [selectedDesks, setSelectedDesks] = useState<string[]>([]);
+  var [selectedDesks, setSelectedDesks] = useState<string[]>([]);
+
+
+  const desk1Ref = useRef<HTMLSelectElement>(null);
+  const desk2Ref = useRef<HTMLSelectElement>(null);
+  const desk3Ref = useRef<HTMLSelectElement>(null);
+
+
+  
+  const desk1fromdb = 'desk1';
+  //selectedDesks.push(desk1fromdb);
+
+  const desk2fromdb = 'desk2';
+  //selectedDesks.push(desk2fromdb);
+
+  const desk3fromdb = 'desk5';
+  //selectedDesks.push(desk3fromdb);
+
+
+  var isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
+
 
   const handleDeskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
+
+
+    console.log(desk1Ref.current?.value);
+    
+    
+    setSelectedDesks([]);
+    console.log(selectedDesks);
+
+    if (desk1Ref.current && desk2Ref.current && desk3Ref.current) {
+      setSelectedDesks([desk1Ref.current.value,desk2Ref.current.value,desk3Ref.current.value]);
+      console.log("mpike mesa");
+    }
+    
+
+    console.log(selectedDesks);
+
+
+    isDeskDisabled = (desk: string) => selectedDesks.includes(desk)
+
+
+/*
     setSelectedDesks((prev) => {
       if (prev.includes(value)) {
         return prev.filter((desk) => desk !== value);
@@ -27,16 +64,18 @@ export default function Form() {
         return [...prev, value];
       }
     });
-  };
-  // const handleDeskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const { name, value } = e.target;
-  //   setSelectedDesks((prev) => {
-  //     const newSelectedDesks = { ...prev, [name]: value };
-  //     return Object.values(newSelectedDesks);
-  //   });
-  // };
+*/
 
-  const isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
+
+};
+ 
+
+
+  isDeskDisabled = (desk: string) => selectedDesks.includes(desk)
+
+  
+
+
 
   return (
     <form action={formAction}>
@@ -49,12 +88,13 @@ export default function Form() {
             <select
               id="desk1"
               name="desk1"
+              ref= {desk1Ref}
               className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              defaultValue= {desk2fromdb}
               aria-describedby="desk1-error"
               onChange={handleDeskChange}
             >
-              <option value="" disabled>
+              <option value="">
                 Select a desk
               </option>
               <option value="desk1" disabled={isDeskDisabled('desk1')}>Desk 1</option>
@@ -64,14 +104,7 @@ export default function Form() {
               <option value="desk5" disabled={isDeskDisabled('desk5')}>Desk 5</option>
             </select>
             <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            <div id="desk1-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.desk1 &&
-                state.errors.desk1.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
+           
           </div>
         </div>
 
@@ -83,12 +116,13 @@ export default function Form() {
             <select
               id="desk2"
               name="desk2"
+              ref= {desk2Ref}
               className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              defaultValue= {desk1fromdb}
               aria-describedby="desk2-error"
               onChange={handleDeskChange}
             >
-              <option value="" disabled>
+              <option value="">
                 Select a desk
               </option>
               <option value="desk1" disabled={isDeskDisabled('desk1')}>Desk 1</option>
@@ -98,14 +132,7 @@ export default function Form() {
               <option value="desk5" disabled={isDeskDisabled('desk5')}>Desk 5</option>
             </select>
             <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            <div id="desk2-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.desk2 &&
-                state.errors.desk2.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
+            
           </div>
         </div>
 
@@ -117,12 +144,13 @@ export default function Form() {
             <select
               id="desk3"
               name="desk3"
+              ref= {desk3Ref}
               className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              defaultValue= {desk3fromdb}
               aria-describedby="desk3-error"
               onChange={handleDeskChange}
             >
-              <option value="" disabled>
+              <option value="">
                 Select a desk
               </option>
               <option value="desk1" disabled={isDeskDisabled('desk1')}>Desk 1</option>
@@ -132,14 +160,7 @@ export default function Form() {
               <option value="desk5" disabled={isDeskDisabled('desk5')}>Desk 5</option>
             </select>
             <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            <div id="desk3-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.desk3 &&
-                state.errors.desk3.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
+           
           </div>
         </div>
       </div>
