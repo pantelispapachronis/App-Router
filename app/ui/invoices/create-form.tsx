@@ -31,7 +31,7 @@ export default function Form() {
   //selectedDesks.push(desk3fromdb);
 
 
-  const isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
+  let isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
 
 
   const handleDeskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
