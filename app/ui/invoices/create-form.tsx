@@ -12,7 +12,7 @@ import React, { useRef } from 'react';
 export default function Form() {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createInvoice, initialState);
-  var [selectedDesks, setSelectedDesks] = useState<string[]>([]);
+  const [selectedDesks, setSelectedDesks] = useState<string[]>([]);
 
 
   const desk1Ref = useRef<HTMLSelectElement>(null);
@@ -31,7 +31,7 @@ export default function Form() {
   //selectedDesks.push(desk3fromdb);
 
 
-  var isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
+  const isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
 
 
   const handleDeskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
