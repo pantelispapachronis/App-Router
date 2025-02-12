@@ -3,14 +3,14 @@
 const users = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'User',
+    name: 'Christos Sakkas',
     email: 'user@nextmail.com',
     password: '123456',
   },
 
   {
     id: '412544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'User',
+    name: 'Pantelis Papachronis',
     email: 'ppapachronis@infolysis',
     password: '123456',
   },
@@ -19,15 +19,15 @@ const users = [
 const preferences = [
   {
     user_id: users[0].id,
-    desk1: '',
-    desk2: '',
-    desk3: '',
+    desk1: 'Desk 1',
+    desk2: 'Desk 3',
+    desk3: 'Desk 5',
   },
   {
     user_id: users[1].id,
-    desk1: '',
-    desk2: '',
-    desk3: '',
+    desk1: 'Desk 4',
+    desk2: 'Desk 2',
+    desk3: 'Desk 1',
   }
 ]
 const customers = [
@@ -165,4 +165,4 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
-export { users, customers, invoices, revenue };
+export { users, customers, invoices, revenue, preferences };
