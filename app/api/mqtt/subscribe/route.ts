@@ -9,11 +9,11 @@ export async function GET() {
     // Find the path of the Python script
     const scriptPath = path.join(process.cwd(), "scripts", "subscribe_to_mqtt.py");
 
-    // Εκτελεί το Python script
+    // Run the Python script
     //const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8" });
 
     // Test timeout
-    const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8", timeout: 10000 }); // 10 δευτερόλεπτα
+    const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8", timeout: 10000 }); // 10 seconds
 
 
     let outputData = "";
