@@ -1,86 +1,57 @@
 import { NextResponse } from 'next/server';
-import { preferences, users } from '@/app/lib/placeholder-data';
-import fs from 'fs';
-import path from 'path';
 import { db } from '@vercel/postgres';
-
 
 const client = await db.connect();
 
-
-// GET request handler
+// 🔹 GET: Fetches user preferences directly from the database
 export async function GET() {
-  const userPreferences = preferences.map(preference => {
-    const user = users.find(u => u.id === preference.user_id);
-    return {
-        user_id: preference.user_id,
-        name: user?.name,
-        preferences: {
-            desk1: preference.desk1,
-            desk2: preference.desk2,
-            desk3: preference.desk3,
-        }
-    }
-  });
-  return NextResponse.json(userPreferences);
-}
-
-// POST request handler
-export async function POST(request: Request) {
   try {
-    const data = await request.json();
-    const preferenceIndex = preferences.findIndex(p => p.user_id === data.user_id);
+    // Retrieve data from the database
+    const result = await client.sql`
+      SELECT preferences.user_id, users.name, preferences.desk1, preferences.desk2, preferences.desk3
+      FROM preferences
+      JOIN users ON preferences.user_id = users.id
+    `;
 
-    if (preferenceIndex !== -1) {
-      preferences[preferenceIndex] = {
-        ...preferences[preferenceIndex],
-        desk1: data.desk1 || preferences[preferenceIndex].desk1,
-        desk2: data.desk2 || preferences[preferenceIndex].desk2,
-        desk3: data.desk3 || preferences[preferenceIndex].desk3,
-      };
+    // Format the data into JSON response
+    const userPreferences = result.rows.map(preference => ({
+      user_id: preference.user_id,
+      name: preference.name,
+      preferences: {
+        desk1: preference.desk1,
+        desk2: preference.desk2,
+        desk3: preference.desk3,
+      }
+    }));
 
-      // Save to file placeholder-data.ts
-      savePreferencesToFile();
-
-      return NextResponse.json({ message: 'Preferences updated', data: preferences[preferenceIndex] });
-    } else {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
-    }
+    return NextResponse.json(userPreferences);
   } catch (error) {
-    return NextResponse.json({ message: 'Error updating preferences', error }, { status: 500 });
+    return NextResponse.json({ message: 'Error fetching preferences', error }, { status: 500 });
   }
 }
 
-// Function to save preferences to file
-function savePreferencesToFile() {
-  const filePath = path.join(process.cwd(), 'app/lib/placeholder-data.ts');
-  
-  // Read the file as a string
-  let fileContent = fs.readFileSync(filePath, 'utf8');
-
-  // Update the preferences array
-  const preferencesString = `const preferences = ${JSON.stringify(preferences, null, 2)};`;
-
-  fileContent = fileContent.replace(/const preferences = \[.*?\];/s, preferencesString);
-
-  // write the updated content back to the file
-  fs.writeFileSync(filePath, fileContent, 'utf8');
-}
-
-async function updateUserPreferences(userId: string, newPreferences: { desk1?: string; desk2?: string; desk3?: string }) {
+// 🔹 POST: Updates user preferences directly in the database
+export async function POST(request: Request) {
   try {
-    const updatedPreference = await client.sql`
+    const { user_id, desk1, desk2, desk3 } = await request.json();
+
+    // Update user preferences in the database
+    const result = await client.sql`
       UPDATE preferences
-      SET desk1 = ${newPreferences.desk1}, 
-          desk2 = ${newPreferences.desk2}, 
-          desk3 = ${newPreferences.desk3}
-      WHERE user_id = ${userId}
+      SET desk1 = ${desk1}, 
+          desk2 = ${desk2}, 
+          desk3 = ${desk3}
+      WHERE user_id = ${user_id}
       RETURNING *;
     `;
-    
-    return updatedPreference;
+
+    // Check if the user exists
+    if (result.rows.length === 0) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Preferences updated', data: result.rows[0] });
   } catch (error) {
-    console.error('Error updating preferences:', error);
-    throw error;
+    return NextResponse.json({ message: 'Error updating preferences', error }, { status: 500 });
   }
 }

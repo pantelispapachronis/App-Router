@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const deskPrefA = body.preferences?.DeskPref_A;
     const deskPrefB = body.preferences?.DeskPref_B;
     const deskPrefC = body.preferences?.DeskPref_C;
-    const presence = body.presence?.toUpperCase(); // Μετατρέπουμε σε κεφαλαία
+    const presence = body.presence?.toUpperCase(); 
 
     // Check if any of the required parameters is missing
     if (!employeeId || !deskPrefA || !deskPrefB || !deskPrefC || !presence) {

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
-import { preferences, revenue, users } from 'app/lib/placeholder-data';
+import { preferences, users } from 'app/lib/placeholder-data';
 
 const client = await db.connect();
 
@@ -53,23 +53,23 @@ async function seedPreferences() {
   return insertedPreferences;
 }
 
-async function updateUserPreferences(userId: string, newPreferences: { desk1?: string; desk2?: string; desk3?: string }) {
-  try {
-    const updatedPreference = await client.sql`
-      UPDATE preferences
-      SET desk1 = ${newPreferences.desk1}, 
-          desk2 = ${newPreferences.desk2}, 
-          desk3 = ${newPreferences.desk3}
-      WHERE user_id = ${userId}
-      RETURNING *;
-    `;
+// async function updateUserPreferences(userId: string, newPreferences: { desk1?: string; desk2?: string; desk3?: string }) {
+//   try {
+//     const updatedPreference = await client.sql`
+//       UPDATE preferences
+//       SET desk1 = ${newPreferences.desk1}, 
+//           desk2 = ${newPreferences.desk2}, 
+//           desk3 = ${newPreferences.desk3}
+//       WHERE user_id = ${userId}
+//       RETURNING *;
+//     `;
     
-    return updatedPreference;
-  } catch (error) {
-    console.error('Error updating preferences:', error);
-    throw error;
-  }
-}
+//     return updatedPreference;
+//   } catch (error) {
+//     console.error('Error updating preferences:', error);
+//     throw error;
+//   }
+// }
 
 export async function GET() {
   // return Response.json({
