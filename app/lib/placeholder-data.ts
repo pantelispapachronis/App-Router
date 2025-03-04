@@ -19,15 +19,15 @@ const users = [
 const preferences = [
   {
     "user_id": "410544b2-4001-4271-9855-fec4b6a6442a",
-    "desk1": "Desk 1",
-    "desk2": "Desk 2",
-    "desk3": "Desk 5"
+    "desk1": "R105_01",
+    "desk2": "R105_02",
+    "desk3": "R105_06"
   },
   {
     "user_id": "412532b2-4001-4271-9855-fec4b6a6442a",
-    "desk1": "Desk 4",
-    "desk2": "Desk 2",
-    "desk3": "Desk 3"
+    "desk1": "R105_01",
+    "desk2": "R105_02",
+    "desk3": "R105_06"
   }
 ];
 

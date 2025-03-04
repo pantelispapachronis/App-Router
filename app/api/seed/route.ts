@@ -4,6 +4,19 @@ import { preferences, users } from 'app/lib/placeholder-data';
 
 const client = await db.connect();
 
+// Delete all existing data before seeding
+// async function clearDatabase() {
+//   await client.sql` 
+//   DROP TABLE IF EXISTS preferences CASCADE;
+//   DROP TABLE IF EXISTS customers CASCADE;
+//   DROP TABLE IF EXISTS invoices CASCADE;
+//   DROP TABLE IF EXISTS revenue CASCADE;
+//   `;
+
+// }
+
+
+// 🔹 Seed users into the database
 async function seedUsers() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
@@ -23,12 +36,13 @@ async function seedUsers() {
         VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
         ON CONFLICT (id) DO NOTHING;
       `;
-    }),
+    })
   );
 
   return insertedUsers;
 }
 
+// 🔹 Seed preferences into the database
 async function seedPreferences() {
   await client.sql`
     CREATE TABLE IF NOT EXISTS preferences (
@@ -46,42 +60,58 @@ async function seedPreferences() {
         VALUES (${preference.user_id}, ${preference.desk1}, ${preference.desk2}, ${preference.desk3})
         ON CONFLICT (user_id) DO UPDATE
         SET desk1 = EXCLUDED.desk1, desk2 = EXCLUDED.desk2, desk3 = EXCLUDED.desk3;
-      `,
-    ),
+      `
+    )
   );
 
   return insertedPreferences;
 }
 
-// async function updateUserPreferences(userId: string, newPreferences: { desk1?: string; desk2?: string; desk3?: string }) {
-//   try {
-//     const updatedPreference = await client.sql`
-//       UPDATE preferences
-//       SET desk1 = ${newPreferences.desk1}, 
-//           desk2 = ${newPreferences.desk2}, 
-//           desk3 = ${newPreferences.desk3}
-//       WHERE user_id = ${userId}
-//       RETURNING *;
-//     `;
-    
-//     return updatedPreference;
-//   } catch (error) {
-//     console.error('Error updating preferences:', error);
-//     throw error;
-//   }
-// }
+// 🔹 Seed desks into the database
+async function seedDesks() {
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS desks (
+      id VARCHAR(45) NOT NULL PRIMARY KEY,
+      is_available BOOLEAN NOT NULL
+    );
+  `;
 
+  // Sample desk data
+  const desks = [
+    { id: 'R105_01', is_available: true },
+    { id: 'R105_02', is_available: true },
+    { id: 'R105_06', is_available: true },
+    { id: 'R106_01', is_available: true },
+    { id: 'R108_07', is_available: true },
+    { id: 'R204_02', is_available: true },
+    { id: 'R209_01', is_available: true },
+    { id: 'R303_12', is_available: true },
+    { id: 'R512_05', is_available: true },
+  ];
+
+  const insertedDesks = await Promise.all(
+    desks.map((desk) =>
+      client.sql`
+        INSERT INTO desks (id, is_available)
+        VALUES (${desk.id}, ${desk.is_available})
+        ON CONFLICT (id) DO UPDATE
+        SET is_available = EXCLUDED.is_available;
+      `
+    )
+  );
+
+  return insertedDesks;
+}
+
+// 🔹 GET: Clear all tables before seeding new data
 export async function GET() {
-  // return Response.json({
-  //   message:
-  //     'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  // });
   try {
     await client.sql`BEGIN`;
+    // await clearDatabase(); // Clear existing data before seeding
     await seedUsers();
     await seedPreferences();
+    await seedDesks();
     await client.sql`COMMIT`;
-    // console.log('Database seeded successfully');
 
     return Response.json({ message: 'Database seeded successfully' });
   } catch (error) {

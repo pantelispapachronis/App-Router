@@ -8,9 +8,9 @@ export async function POST(req: Request) {
 
     // Get the data from jsaon body
     const employeeId = body.employee_id;
-    const deskPrefA = body.preferences?.DeskPref_A;
-    const deskPrefB = body.preferences?.DeskPref_B;
-    const deskPrefC = body.preferences?.DeskPref_C;
+    const deskPrefA = body.preferences?.desk1;
+    const deskPrefB = body.preferences?.desk2;
+    const deskPrefC = body.preferences?.desk3;
     const presence = body.presence?.toUpperCase(); 
 
     // Check if any of the required parameters is missing

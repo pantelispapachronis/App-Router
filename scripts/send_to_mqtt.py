@@ -27,7 +27,7 @@ def send_forecast_to_mqtt(desk_preferences):
     # Get data from the command line
 if __name__ == "__main__":
     if len(sys.argv) < 6:
-        print("Usage: python send_to_mqtt.py <EMPLOYEE_ID> <DeskPref_A> <DeskPref_B> <DeskPref_C> <PRESENCE>")
+        print("Usage: python send_to_mqtt.py <EMPLOYEE_ID> <desk1> <desk2> <desk3> <PRESENCE>")
         sys.exit(1)
 
     # Get the data from the command line
@@ -41,9 +41,9 @@ if __name__ == "__main__":
     desk_preferences = {
         "employee_id": employee_id,
         "preferences": {
-            "DeskPref_A": desk_pref_a,
-            "DeskPref_B": desk_pref_b,
-            "DeskPref_C": desk_pref_c
+            "desk1": desk_pref_a,
+            "desk2": desk_pref_b,
+            "desk3": desk_pref_c
         },
         "presence": presence
     }
