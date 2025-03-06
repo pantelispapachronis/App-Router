@@ -20,7 +20,7 @@ export default async function InvoicesTable({
     status: 'paid',
     name: 'R105_01',
     email: 'evil@rabbit.com',
-    image_url: '/preferences/evil-rabbit.png'
+    image_url: '/customers/evil-rabbit.png'
   },
   {
     id: '72648655-fb68-4c5a-82b4-148310b3848d2',
@@ -29,7 +29,7 @@ export default async function InvoicesTable({
     status: 'pending',
     name: 'R105_02',
     email: 'evil@rabbit.com',
-    image_url: '/preferences/evil-rabbit.png'
+    image_url: '/customers/evil-rabbit.png'
   },
   {
     id: '72648655-fb68-4c5a-82b4-148310b3848d3',
@@ -38,7 +38,7 @@ export default async function InvoicesTable({
     status: 'paid',
     name: 'R208_03',
     email: 'evil@rabbit.com',
-    image_url: '/preferences/evil-rabbit.png'
+    image_url: '/customers/evil-rabbit.png'
   }];
 
   return (

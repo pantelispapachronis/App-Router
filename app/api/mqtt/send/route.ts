@@ -1,17 +1,31 @@
 import { NextResponse } from "next/server";
 import { exec } from "child_process";
 import path from "path";
+import { fetchPreferences } from "@/app/lib/data";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
-    const body = await req.json(); // Getthe data from the request body
+    // Read parameters from GET request
+    const url = new URL(req.url);
+    const presence = url.searchParams.get("presence");
 
-    // Get the data from jsaon body
-    const employeeId = body.employee_id;
-    const deskPrefA = body.preferences?.desk1;
-    const deskPrefB = body.preferences?.desk2;
-    const deskPrefC = body.preferences?.desk3;
-    const presence = body.presence?.toUpperCase(); 
+    if (!presence) {
+      return NextResponse.json({ success: false, error: "Missing presence parameter" }, { status: 400 });
+    }
+
+    // Call get API preferences
+    const user_id="412532b2-4001-4271-9855-fec4b6a6442a";
+
+    const userprefJSON = await fetchPreferences(user_id);
+    const userpref = JSON.parse(JSON.stringify(userprefJSON));
+    //console.log(userpref[0].user_id);
+    //console.log(userpref[0].desk1);
+
+    // Get the data from JSON body
+    const employeeId = userpref[0].user_id;
+    const deskPrefA = userpref[0].desk1;
+    const deskPrefB = userpref[0].desk2;
+    const deskPrefC = userpref[0].desk3;
 
     // Check if any of the required parameters is missing
     if (!employeeId || !deskPrefA || !deskPrefB || !deskPrefC || !presence) {
@@ -55,3 +69,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }
+
+
+

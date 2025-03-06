@@ -1,62 +1,56 @@
-'use client'
+"use client";
 
-import { CustomerField } from '@/app/lib/definitions';
-import Link from 'next/link';
-import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
-import { createInvoice, State } from '@/app/lib/actions';  //To be checked - removed
-import { useActionState } from 'react';
-import { useState } from 'react';
-import React, { useRef } from 'react';
+import { CustomerField } from "@/app/lib/definitions";
+import Link from "next/link";
+import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/app/ui/button";
+import { createInvoice, State } from "@/app/lib/actions"; //To be checked - removed
+import { useActionState } from "react";
+import { useState } from "react";
+import React, { useRef } from "react";
 
 export default function Form() {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createInvoice, initialState); //To be checked - changed
   const [selectedDesks, setSelectedDesks] = useState<string[]>([]);
 
-
   const desk1Ref = useRef<HTMLSelectElement>(null);
   const desk2Ref = useRef<HTMLSelectElement>(null);
   const desk3Ref = useRef<HTMLSelectElement>(null);
 
-
-  
-  const desk1fromdb = 'desk1';
+  const desk1fromdb = "desk1";
   //selectedDesks.push(desk1fromdb);
 
-  const desk2fromdb = 'desk2';
+  const desk2fromdb = "desk2";
   //selectedDesks.push(desk2fromdb);
 
-  const desk3fromdb = 'desk5';
+  const desk3fromdb = "desk5";
   //selectedDesks.push(desk3fromdb);
 
-
   let isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
-
 
   const handleDeskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
 
-
     console.log(desk1Ref.current?.value);
-    
-    
+
     setSelectedDesks([]);
     console.log(selectedDesks);
 
     if (desk1Ref.current && desk2Ref.current && desk3Ref.current) {
-      setSelectedDesks([desk1Ref.current.value,desk2Ref.current.value,desk3Ref.current.value]);
+      setSelectedDesks([
+        desk1Ref.current.value,
+        desk2Ref.current.value,
+        desk3Ref.current.value,
+      ]);
       console.log("mpike mesa");
     }
-    
 
     console.log(selectedDesks);
 
+    isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
 
-    isDeskDisabled = (desk: string) => selectedDesks.includes(desk)
-
-
-/*
+    /*
     setSelectedDesks((prev) => {
       if (prev.includes(value)) {
         return prev.filter((desk) => desk !== value);
@@ -65,17 +59,9 @@ export default function Form() {
       }
     });
 */
+  };
 
-
-};
- 
-
-
-  isDeskDisabled = (desk: string) => selectedDesks.includes(desk)
-
-  
-
-
+  isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
 
   return (
     <form action={formAction}>
@@ -88,23 +74,30 @@ export default function Form() {
             <select
               id="desk1"
               name="desk1"
-              ref= {desk1Ref}
+              ref={desk1Ref}
               className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue= {desk2fromdb}
+              defaultValue={desk2fromdb}
               aria-describedby="desk1-error"
               onChange={handleDeskChange}
             >
-              <option value="">
-                Select a desk
+              <option value="">Select a desk</option>
+              <option value="desk1" disabled={isDeskDisabled("desk1")}>
+                Desk 1
               </option>
-              <option value="desk1" disabled={isDeskDisabled('desk1')}>Desk 1</option>
-              <option value="desk2" disabled={isDeskDisabled('desk2')}>Desk 2</option>
-              <option value="desk3" disabled={isDeskDisabled('desk3')}>Desk 3</option>
-              <option value="desk4" disabled={isDeskDisabled('desk4')}>Desk 4</option>
-              <option value="desk5" disabled={isDeskDisabled('desk5')}>Desk 5</option>
+              <option value="desk2" disabled={isDeskDisabled("desk2")}>
+                Desk 2
+              </option>
+              <option value="desk3" disabled={isDeskDisabled("desk3")}>
+                Desk 3
+              </option>
+              <option value="desk4" disabled={isDeskDisabled("desk4")}>
+                Desk 4
+              </option>
+              <option value="desk5" disabled={isDeskDisabled("desk5")}>
+                Desk 5
+              </option>
             </select>
             <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-           
           </div>
         </div>
 
@@ -116,23 +109,30 @@ export default function Form() {
             <select
               id="desk2"
               name="desk2"
-              ref= {desk2Ref}
+              ref={desk2Ref}
               className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue= {desk1fromdb}
+              defaultValue={desk1fromdb}
               aria-describedby="desk2-error"
               onChange={handleDeskChange}
             >
-              <option value="">
-                Select a desk
+              <option value="">Select a desk</option>
+              <option value="desk1" disabled={isDeskDisabled("desk1")}>
+                Desk 1
               </option>
-              <option value="desk1" disabled={isDeskDisabled('desk1')}>Desk 1</option>
-              <option value="desk2" disabled={isDeskDisabled('desk2')}>Desk 2</option>
-              <option value="desk3" disabled={isDeskDisabled('desk3')}>Desk 3</option>
-              <option value="desk4" disabled={isDeskDisabled('desk4')}>Desk 4</option>
-              <option value="desk5" disabled={isDeskDisabled('desk5')}>Desk 5</option>
+              <option value="desk2" disabled={isDeskDisabled("desk2")}>
+                Desk 2
+              </option>
+              <option value="desk3" disabled={isDeskDisabled("desk3")}>
+                Desk 3
+              </option>
+              <option value="desk4" disabled={isDeskDisabled("desk4")}>
+                Desk 4
+              </option>
+              <option value="desk5" disabled={isDeskDisabled("desk5")}>
+                Desk 5
+              </option>
             </select>
             <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            
           </div>
         </div>
 
@@ -144,23 +144,30 @@ export default function Form() {
             <select
               id="desk3"
               name="desk3"
-              ref= {desk3Ref}
+              ref={desk3Ref}
               className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue= {desk3fromdb}
+              defaultValue={desk3fromdb}
               aria-describedby="desk3-error"
               onChange={handleDeskChange}
             >
-              <option value="">
-                Select a desk
+              <option value="">Select a desk</option>
+              <option value="desk1" disabled={isDeskDisabled("desk1")}>
+                Desk 1
               </option>
-              <option value="desk1" disabled={isDeskDisabled('desk1')}>Desk 1</option>
-              <option value="desk2" disabled={isDeskDisabled('desk2')}>Desk 2</option>
-              <option value="desk3" disabled={isDeskDisabled('desk3')}>Desk 3</option>
-              <option value="desk4" disabled={isDeskDisabled('desk4')}>Desk 4</option>
-              <option value="desk5" disabled={isDeskDisabled('desk5')}>Desk 5</option>
+              <option value="desk2" disabled={isDeskDisabled("desk2")}>
+                Desk 2
+              </option>
+              <option value="desk3" disabled={isDeskDisabled("desk3")}>
+                Desk 3
+              </option>
+              <option value="desk4" disabled={isDeskDisabled("desk4")}>
+                Desk 4
+              </option>
+              <option value="desk5" disabled={isDeskDisabled("desk5")}>
+                Desk 5
+              </option>
             </select>
             <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-           
           </div>
         </div>
       </div>

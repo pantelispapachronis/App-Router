@@ -1,9 +1,8 @@
-import Link from 'next/link';
-import NavLinks from '@/app/ui/dashboard/nav-links';
-import AerosLogo from '@/app/ui/aeros-logo';
-import { PowerIcon } from '@heroicons/react/24/outline';
-import { signOut } from '@/auth';
-
+import Link from "next/link";
+import NavLinks from "@/app/ui/dashboard/nav-links";
+import AerosLogo from "@/app/ui/aeros-logo";
+import { PowerIcon } from "@heroicons/react/24/outline";
+import { signOut } from "@/auth";
 
 export default function SideNav() {
   return (
@@ -21,8 +20,25 @@ export default function SideNav() {
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
         <form
           action={async () => {
-            'use server';
-            await signOut({ redirectTo: '/' });
+            "use server";
+            console.log("STARTING SIGNOUT");
+            const response2 = await fetch(
+              "http://localhost:3000/api/mqtt/send?presence=FALSE",
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const data2 = await response2.json();
+            if (response2.ok) {
+              console.log("Presence FALSE updated successfully!");
+            } else {
+              console.log(`Error2: ${data2.message}`);
+            }
+
+            await signOut({ redirectTo: "/" });
           }}
         >
           <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
