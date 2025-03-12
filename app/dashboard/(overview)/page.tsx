@@ -1,31 +1,29 @@
-import CardWrapper from '@/app/ui/dashboard/cards';
 import { lusitana } from '@/app/ui/fonts';
-import { Suspense } from 'react';
-import { CardsSkeleton } from '@/app/ui/skeletons';
+import Image from 'next/image';
+
 
 export default function Page() {
   return (
     <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Welcome
+      <h1 className={`${lusitana.className} mb-4 text-xl md:text-3xl text-center`}>
+      ENERGY EFFICIENT, <br/>HEALTH SAFE<br/> &<br/> SUSTAINABLE <br/>SMART BUILDINGS
       </h1>
-
-      {/* Card Section */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Suspense fallback={<CardsSkeleton />}>
-          <CardWrapper />
-        </Suspense>
-      </div>
-
-      {/* Charts & Invoices Section */}
-      {/* <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <Suspense fallback={<RevenueChartSkeleton />}>
-          <RevenueChart />
-        </Suspense>
-        <Suspense fallback={<LatestInvoicesSkeleton />}>
-          <LatestInvoices />
-        </Suspense>
-      </div> */}
+      <div className="flex items-center justify-center p-6  md:px-28 md:py-12">
+                <Image
+                  src="/smart_building.png"
+                  width={300}
+                  height={300}
+                  className="hidden md:block"
+                  alt="Smart Building Image showing desktop version"
+                />
+                <Image
+                  src="/smart_building.png"
+                  width={300}
+                  height={300}
+                  className="block md:hidden"
+                  alt="Smart Building Image showing mobile version"
+                  />
+              </div>
     </main>
   );
 }
