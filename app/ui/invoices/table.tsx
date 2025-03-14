@@ -13,76 +13,30 @@ export default async function InvoicesTable({
 }) {
   //const invoices = await fetchFilteredInvoices(query, currentPage);
   //console.log(invoices);
-  const invoices = [{
-    id: '72648655-fb68-4c5a-82b4-148310b3848d1',
-    amount: 150000,
-    date: "2025-01-30T22:00:00.000Z",
-    status: 'paid',
-    name: 'R105_01',
-    email: 'evil@rabbit.com',
-    image_url: '/customers/evil-rabbit.png'
-  },
-  {
-    id: '72648655-fb68-4c5a-82b4-148310b3848d2',
-    amount: 150000,
-    date: "2025-01-30T22:00:00.000Z",
-    status: 'pending',
-    name: 'R105_02',
-    email: 'evil@rabbit.com',
-    image_url: '/customers/evil-rabbit.png'
-  },
-  {
-    id: '72648655-fb68-4c5a-82b4-148310b3848d3',
-    amount: 150000,
-    date: "2025-01-30T22:00:00.000Z",
-    status: 'paid',
-    name: 'R208_03',
-    email: 'evil@rabbit.com',
-    image_url: '/customers/evil-rabbit.png'
-  }];
+  
+  // Fetch data from the recommendation API
+  const response = await fetch('http://localhost:3000/api/recommendation', { 
+    cache: 'no-store' 
+  });
+  const data = await response.json();
+
+  console.log("GIGA BIG");
+  console.log(data);
+  // Map the API response to the invoice structure
+  const invoices = data.recommendations.map((rec: {desk: number, object: string}) => ({
+    id: `desk-${rec.desk}`,
+    status: rec.desk % 2 === 0 ? 'blocked' : 'available', // Alternating status for demonstration
+    name: rec.object,
+  }));
+
+  console.log(invoices);
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          <div className="md:hidden">
-            {invoices?.map((invoice) => (
-              <div
-                key={invoice.id}
-                className="mb-2 w-full rounded-md bg-white p-4"
-              >
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <div className="mb-2 flex items-center">
-                      <Image
-                        src={invoice.image_url}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${invoice.name}'s profile picture`}
-                      />
-                      <p>{invoice.name}</p>
-                    </div>
-                    <p className="text-sm text-gray-500">{invoice.email}</p>
-                  </div>
-                  <InvoiceStatus status={invoice.status} />
-                </div>
-                <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">
-                      {formatCurrency(invoice.amount)}
-                    </p>
-                    <p>{formatDateToLocal(invoice.date)}</p>
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    {invoice.status === 'paid' && <UpdateInvoice id={invoice.id} />}
-                    <DeleteInvoice id={invoice.id} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
+          
+          <table className="min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
@@ -97,7 +51,7 @@ export default async function InvoicesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {invoices?.map((invoice) => (
+              {invoices?.map((invoice : any) => (
                 <tr
                   key={invoice.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -114,8 +68,8 @@ export default async function InvoicesTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {invoice.status === 'paid' && <UpdateInvoice id={invoice.id} />}
-                      {invoice.status === 'pending' && <UpdateInvoiceError id={invoice.id} />}
+                      {invoice.status === 'available' && <UpdateInvoice id={invoice.id} />}
+                      {invoice.status === 'blocked' && <UpdateInvoiceError id={invoice.id} />}
                     </div>
                   </td>
                 </tr>

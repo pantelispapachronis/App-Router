@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { db } from '@vercel/postgres';
 
-const client = await db.connect();
+
 
 // 🔹 GET: Fetches user preferences directly from the database
 export async function GET() {
+  const client = await db.connect();
   try {
     // Retrieve data from the database
     const result = await client.sql`
@@ -32,6 +33,7 @@ export async function GET() {
 
 // 🔹 POST: Updates user preferences directly in the database
 export async function POST(request: Request) {
+  const client = await db.connect();
   try {
     const { user_id, desk1, desk2, desk3 } = await request.json();
 

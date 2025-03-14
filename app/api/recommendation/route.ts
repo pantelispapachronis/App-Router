@@ -1,4 +1,7 @@
 export async function GET() {
+
+    console.log("GET /API/RECOMMENDATION REST CALL");
+
     const baseUrl = "http://172.16.0.243:30676/ngsi-ld/v1/entities";
     const slots = [1, 2, 3];
     const employeeId = "urn:Pilot5:Employee:A1020001:RankedRecommendation:Slot";
