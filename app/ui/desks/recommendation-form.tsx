@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 
 export default function Form() {
-  const [selectedDesks, setSelectedDesks] = useState<string[]>([]);
+  const [selectedDesks, setSelectedDesks] = useState<string[]>(["", "", ""]);
   const desk1Ref = useRef<HTMLSelectElement>(null);
   const desk2Ref = useRef<HTMLSelectElement>(null);
   const desk3Ref = useRef<HTMLSelectElement>(null);
+  const [loading, setLoading] = useState(true);
 
   // Mock user ID (Replace with actual user ID from auth/context)
   const user_id = "410544b2-4001-4271-9855-fec4b6a6442a";
@@ -18,17 +19,44 @@ export default function Form() {
   const desks = [
     { id: "R105_01", is_available: true },
     { id: "R105_02", is_available: true },
-    { id: "R105_06", is_available: true },
     { id: "R106_01", is_available: true },
-    { id: "R108_07", is_available: true },
-    { id: "R204_02", is_available: true },
+    { id: "R106_02", is_available: true },
+    { id: "R208_01", is_available: true },
+    { id: "R208_02", is_available: true },
+    { id: "R208_03", is_available: true },
+    { id: "R208_04", is_available: true },
     { id: "R209_01", is_available: true },
-    { id: "R303_12", is_available: true },
-    { id: "R512_05", is_available: true },
   ];
 
   // Function to check if a desk option should be disabled
   const isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
+
+  // Fetch user preferences on mount
+  useEffect(() => {
+    const fetchPreferences = async () => {
+      try {
+        const response = await fetch("/api/preferences");
+        const data = await response.json();
+
+        if (response.ok) {
+          const userPreferences = data.find((user: any) => user.user_id === user_id);
+          if (userPreferences) {
+            setSelectedDesks([
+              userPreferences.preferences.desk1 || "",
+              userPreferences.preferences.desk2 || "",
+              userPreferences.preferences.desk3 || "",
+            ]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching preferences:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPreferences();
+  }, []);
 
   // Handle desk selection change
   const handleDeskChange = () => {
@@ -45,7 +73,6 @@ export default function Form() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Ensure all fields are filled
     if (!desk1Ref.current || !desk2Ref.current || !desk3Ref.current) return;
 
     const payload = {
@@ -68,19 +95,7 @@ export default function Form() {
 
       if (response.ok) {
         console.log("Preferences updated successfully!");
-
-        const response2 = await fetch("/api/mqtt/send?presence=TRUE", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data2 = await response2.json();
-        if (response2.ok) {
-          alert("Preferences and presence updated successfully!");
-        } else {
-          alert(`Error2: ${data2.message}`);
-        }
+        alert("Preferences updated successfully!");
       } else {
         alert(`Error: ${data.message}`);
       }
@@ -89,6 +104,10 @@ export default function Form() {
       alert("Failed to update preferences.");
     }
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -106,6 +125,7 @@ export default function Form() {
                 ref={index === 0 ? desk1Ref : index === 1 ? desk2Ref : desk3Ref}
                 className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2"
                 onChange={handleDeskChange}
+                defaultValue={selectedDesks[index]} // Set default value from API
               >
                 <option value="">Select a desk</option>
                 {desks.map((desk) => (

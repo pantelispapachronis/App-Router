@@ -80,13 +80,13 @@ async function seedDesks() {
   const desks = [
     { id: 'R105_01', is_available: true },
     { id: 'R105_02', is_available: true },
-    { id: 'R105_06', is_available: true },
     { id: 'R106_01', is_available: true },
-    { id: 'R108_07', is_available: true },
-    { id: 'R204_02', is_available: true },
+    { id: 'R106_02', is_available: true },
+    { id: 'R208_01', is_available: true },
+    { id: 'R208_02', is_available: true },
+    { id: 'R208_03', is_available: true },
+    { id: 'R208_04', is_available: true },
     { id: 'R209_01', is_available: true },
-    { id: 'R303_12', is_available: true },
-    { id: 'R512_05', is_available: true },
   ];
 
   const insertedDesks = await Promise.all(

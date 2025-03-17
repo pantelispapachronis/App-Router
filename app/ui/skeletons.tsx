@@ -139,7 +139,7 @@ export function TableRowSkeleton() {
   );
 }
 
-export function InvoicesMobileSkeleton() {
+export function DeskMobileSkeleton() {
   return (
     <div className="mb-2 w-full rounded-md bg-white p-4">
       <div className="flex items-center justify-between border-b border-gray-100 pb-8">
@@ -163,18 +163,18 @@ export function InvoicesMobileSkeleton() {
   );
 }
 
-export function InvoicesTableSkeleton() {
+export function DeskTableSkeleton() {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
+            <DeskMobileSkeleton />
+            <DeskMobileSkeleton />
+            <DeskMobileSkeleton />
+            <DeskMobileSkeleton />
+            <DeskMobileSkeleton />
+            <DeskMobileSkeleton />
           </div>
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">

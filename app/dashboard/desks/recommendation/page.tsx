@@ -3,8 +3,8 @@ import Breadcrumbs from '@/app/ui/desks/breadcrumbs';
 import { fetchCustomers } from '@/app/lib/data'; // To be checked - changed
 import { Metadata } from 'next';
 
-import Table from '@/app/ui/invoices/table';
-import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
+import Table from '@/app/ui/desks/table';
+import { DeskTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 import Pagination from '@/app/ui/invoices/pagination';
 
@@ -44,7 +44,7 @@ export default async function Page(props: {
       />
       
       
-      <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+      <Suspense key={query + currentPage} fallback={<DeskTableSkeleton />}>
               <Table query={query} currentPage={currentPage} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
