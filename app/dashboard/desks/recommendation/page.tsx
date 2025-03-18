@@ -1,12 +1,11 @@
-import Form from '@/app/ui/desks/recommendation-form';
+// import Form from '@/app/ui/desks/recommendation-form';
 import Breadcrumbs from '@/app/ui/desks/breadcrumbs';
-import { fetchCustomers } from '@/app/lib/data'; // To be checked - changed
 import { Metadata } from 'next';
 
 import Table from '@/app/ui/desks/table';
 import { DeskTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import Pagination from '@/app/ui/invoices/pagination';
+import Pagination from '@/app/ui/desks/pagination';
 
 
 

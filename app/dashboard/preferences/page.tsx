@@ -1,4 +1,3 @@
-import Pagination from '@/app/ui/invoices/pagination';
 import { DeskPreference } from '@/app/ui/preferences/buttons'; //Changed!
 import { lusitana } from '@/app/ui/fonts';
 //import { InvoicesTableSkeleton } from '@/app/ui/skeletons'; export the table skeleton of preferences
