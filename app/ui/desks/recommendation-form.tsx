@@ -11,9 +11,7 @@ export default function Form() {
   const desk2Ref = useRef<HTMLSelectElement>(null);
   const desk3Ref = useRef<HTMLSelectElement>(null);
   const [loading, setLoading] = useState(true);
-
-  // Mock user ID (Replace with actual user ID from auth/context)
-  const user_id = "410544b2-4001-4271-9855-fec4b6a6442a";
+  const [userId, setUserId] = useState<string | null>(null);
 
   // List of available desks
   const desks = [
@@ -31,15 +29,35 @@ export default function Form() {
   // Function to check if a desk option should be disabled
   const isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
 
-  // Fetch user preferences on mount
+  // Fetch user ID & preferences on mount
   useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const res = await fetch("/api/user");
+        const data = await res.json();
+        if (res.ok) {
+          setUserId(data.user_id);
+        } else {
+          console.error("Failed to fetch user ID:", data.error);
+        }
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
     const fetchPreferences = async () => {
       try {
         const response = await fetch("/api/preferences");
         const data = await response.json();
 
         if (response.ok) {
-          const userPreferences = data.find((user: any) => user.user_id === user_id);
+          const userPreferences = data.find((user: any) => user.user_id === userId);
           if (userPreferences) {
             setSelectedDesks([
               userPreferences.preferences.desk1 || "",
@@ -56,7 +74,7 @@ export default function Form() {
     };
 
     fetchPreferences();
-  }, []);
+  }, [userId]); // Run when userId changes
 
   // Handle desk selection change
   const handleDeskChange = () => {
@@ -73,10 +91,10 @@ export default function Form() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!desk1Ref.current || !desk2Ref.current || !desk3Ref.current) return;
+    if (!desk1Ref.current || !desk2Ref.current || !desk3Ref.current || !userId) return;
 
     const payload = {
-      user_id,
+      user_id: userId,
       desk1: desk1Ref.current.value,
       desk2: desk2Ref.current.value,
       desk3: desk3Ref.current.value,

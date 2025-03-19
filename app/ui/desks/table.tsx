@@ -20,9 +20,10 @@ export default async function DeskRecTable({
   console.log("GIGA BIG");
   console.log(data);
   // Map the API response to the invoice structure
+  
   const desks = data.recommendations.map((rec: {desk: number, object: string}) => ({
     id: `desk-${rec.desk}`,
-    status: rec.desk % 2 === 0 ? 'blocked' : 'available', // Alternating status for demonstration
+    status: 'available', // Alternating status for demonstration
     name: rec.object,
   }));
 

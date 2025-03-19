@@ -1,8 +1,9 @@
 "use client";
 
-import { PlusIcon, ComputerDesktopIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ComputerDesktopIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import to useRouter
 
 export function DeskRecommendation() {
   return (
@@ -18,6 +19,7 @@ export function DeskRecommendation() {
 
 export function BookDesk({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter(); // Router instance is created
 
   const handleBooking = async () => {
     setLoading(true);
@@ -31,6 +33,7 @@ export function BookDesk({ id }: { id: string }) {
       const data = await response.json();
       if (response.ok) {
         alert("Desk booked successfully!");
+        router.push("/dashboard"); // Redirect to the dashboard
       } else {
         alert(`Error: ${data.error}`);
       }
@@ -53,6 +56,7 @@ export function BookDesk({ id }: { id: string }) {
     </button>
   );
 }
+
 
 
 export function BookDeskError({ id }: { id: string }) {

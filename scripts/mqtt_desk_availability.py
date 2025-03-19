@@ -37,6 +37,8 @@ if __name__ == "__main__":
     desk_id = sys.argv[1]
     is_available = sys.argv[2]
 
+    print(f"Received Desk ID: {desk_id}")
+
     building_desks = {
         "desk_id": desk_id,
         "is_available": is_available
