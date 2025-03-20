@@ -22,7 +22,8 @@ export default async function DeskRecTable({
   // Map the API response to the invoice structure
   
   const desks = data.recommendations.map((rec: {desk: number, object: string}) => ({
-    id: `desk-${rec.desk}`,
+    // id: `desk-${rec.desk}`,
+    id: `${rec.object}`,
     status: 'available', // Alternating status for demonstration
     name: rec.object,
   }));

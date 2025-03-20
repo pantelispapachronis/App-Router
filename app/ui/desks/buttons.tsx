@@ -68,4 +68,3 @@ export function BookDeskError({ id }: { id: string }) {
     </div>
   );
 }
-
