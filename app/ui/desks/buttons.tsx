@@ -6,14 +6,38 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Import to useRouter
 
 export function DeskRecommendation() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleRecommendation = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3000/api/mqtt/send?presence=TRUE");
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`MQTT call failed: ${err}`);
+      }
+      // Μετά το MQTT, κάνουμε redirect
+      router.push("/dashboard/desks/recommendation");
+    } catch (error) {
+      console.error("Error sending MQTT data:", error);
+      alert("Failed to send presence info.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Link
-      href="/dashboard/desks/recommendation"
+    <button
+      onClick={handleRecommendation}
+      disabled={loading}
       className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
     >
-      <span className="hidden md:block">Get Desk Recommendation</span>{' '}
+      <span className="hidden md:block">
+        {loading ? "Loading..." : "Get Desk Recommendation"}
+      </span>
       <PlusIcon className="h-5 md:ml-4" />
-    </Link>
+    </button>
   );
 }
 
