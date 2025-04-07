@@ -13,11 +13,13 @@ export async function GET() {
     //const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8" });
 
     // Test timeout
-    const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8", timeout: 10000 }); // 10 seconds
+    const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8", timeout: 2000000 }); // 10 seconds
 
+    console.log("Child process started:", childProcess.pid);
 
     let outputData = "";
     let errorData = "";
+
 
     // Check if stdout exists before using it
     if (childProcess.stdout) {
@@ -26,12 +28,15 @@ export async function GET() {
       });
     }
 
+    console.log("data", outputData);
     // Check if stderr exists before using it
     if (childProcess.stderr) {
       childProcess.stderr.on("data", (data) => {
         errorData += data;
       });
     }
+
+    console.log("data", outputData);
 
     childProcess.on("close", (code) => {
       if (code === 0) {

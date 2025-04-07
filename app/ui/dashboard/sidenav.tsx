@@ -2,7 +2,7 @@ import Link from "next/link";
 import NavLinks from "@/app/ui/dashboard/nav-links";
 import AerosLogo from "@/app/ui/aeros-logo";
 import { PowerIcon } from "@heroicons/react/24/outline";
-import { signOut } from "@/auth";
+import { signOut, auth } from "@/auth"; // Import getSession to retrieve user session
 
 export default function SideNav() {
   return (
@@ -22,14 +22,12 @@ export default function SideNav() {
           action={async () => {
             "use server";
             console.log("STARTING SIGNOUT");
+
+            const session = await auth(); // Retrieve the user session
+            const userId = session?.user?.id; // Extract the user ID
+
             const response2 = await fetch(
-              "http://localhost:3000/api/mqtt/send?presence=FALSE",
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              }
+              `http://localhost:3000/api/mqtt/sendserver?presence=FALSE&userid=${userId}`
             );
             const data2 = await response2.json();
             if (response2.ok) {

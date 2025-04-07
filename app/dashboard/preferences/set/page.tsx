@@ -1,6 +1,5 @@
 import Form from '@/app/ui/desks/recommendation-form';
 import Breadcrumbs from '@/app/ui/preferences/breadcrumbs';
-import { fetchCustomers } from '@/app/lib/data'; // To be checked - changed
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

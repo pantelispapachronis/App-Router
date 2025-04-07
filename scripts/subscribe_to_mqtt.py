@@ -1,6 +1,8 @@
 import paho.mqtt.client as mqtt
 import json
 import warnings
+import time
+
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -18,8 +20,9 @@ def on_message(client, userdata, message):
         if "status" in payload and "employee_id":
             status = payload["status"]
             employee_id = payload["employee_id"]
-            print(f"Status {status} for Employee {employee_id}")
-            return True
+            exit()
+            # print(f"Status {status} for Employee {employee_id}")
+            return payload
         else:
             return False
     except json.JSONDecodeError:
@@ -29,7 +32,7 @@ def on_message(client, userdata, message):
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("Connected to MQTT Broker!")
+        # print("Connected to MQTT Broker!")
         client.subscribe(MQTT_TOPIC)
     else:
         print("Failed to connect, return code:", rc)
@@ -42,12 +45,11 @@ def subscribe_to_mqtt():
     mqtt_client.on_message = on_message
 
     mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
-    #mqtt_client.loop_forever()
+    mqtt_client.loop_forever()
 
     #Test loop_start
-    mqtt_client.loop_start()
-    import time
-    time.sleep(5)  
+    # mqtt_client.loop_start()
+    # time.sleep(9)  
 
 
 

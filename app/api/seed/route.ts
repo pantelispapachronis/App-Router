@@ -5,15 +5,15 @@ import { preferences, users } from 'app/lib/placeholder-data';
 const client = await db.connect();
 
 // Delete all existing data before seeding
-// async function clearDatabase() {
-//   await client.sql` 
-//   DROP TABLE IF EXISTS preferences CASCADE;
-//   DROP TABLE IF EXISTS customers CASCADE;
-//   DROP TABLE IF EXISTS invoices CASCADE;
-//   DROP TABLE IF EXISTS revenue CASCADE;
-//   `;
+async function clearDatabase() {
+  await client.sql` 
+  DROP TABLE IF EXISTS preferences CASCADE;
+  DROP TABLE IF EXISTS customers CASCADE;
+  DROP TABLE IF EXISTS invoices CASCADE;
+  DROP TABLE IF EXISTS revenue CASCADE;
+  `;
 
-// }
+}
 
 
 // 🔹 Seed users into the database
@@ -107,7 +107,7 @@ async function seedDesks() {
 export async function GET() {
   try {
     await client.sql`BEGIN`;
-    // await clearDatabase(); // Clear existing data before seeding
+    await clearDatabase(); // Clear existing data before seeding
     await seedUsers();
     await seedPreferences();
     await seedDesks();
