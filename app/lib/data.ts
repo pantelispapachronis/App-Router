@@ -1,19 +1,16 @@
+// app/lib/data.ts
 import { sql } from '@vercel/postgres';
 
-export async function fetchPreferences(myuserid: string) {
+export async function fetchPreferences(userId: string) {
   try {
-    
-
     const result = await sql`
-      SELECT preferences.user_id, users.name, preferences.desk1, preferences.desk2, preferences.desk3
-      FROM preferences, users where preferences.user_id = ${myuserid} and preferences.user_id = users.id
+      SELECT "Id", "DeskPref_A", "DeskPref_B", "DeskPref_C", "Presence", "Rec_System_Rating"
+      FROM EMPLOYEES_PREFERENCES
+      WHERE "Id" = ${userId};
     `;
-
-    const preferences = result.rows;
-    console.log(preferences)
-    return preferences;
+    return result.rows;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error('Failed to fetch all preferences.');
+    throw new Error('Failed to fetch EMPLOYEES_PREFERENCES.');
   }
 }

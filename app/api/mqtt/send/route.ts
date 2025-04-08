@@ -4,72 +4,55 @@ import path from "path";
 import { fetchPreferences } from "@/app/lib/data";
 import { auth } from "@/auth";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    // Get the authenticated session
     const session = await auth();
-
-    if (!session || !session.user?.id) {
+    if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: "User not authenticated" }, { status: 401 });
     }
 
-    const user_id = session.user.id; // Dynamic user ID from session
-
-    // Read parameters from GET request
-    const url = new URL(req.url);
-    const presence = url.searchParams.get("presence");
-
-    if (!presence) {
-      return NextResponse.json({ success: false, error: "Missing presence parameter" }, { status: 400 });
+    const user_id = session.user.id;
+    const preferences = await fetchPreferences(user_id);
+    if (!preferences.length) {
+      return NextResponse.json({ success: false, error: "No preferences found" }, { status: 404 });
     }
 
-    // Fetch user preferences dynamically
-    const userprefJSON = await fetchPreferences(user_id);
-    const userpref = JSON.parse(JSON.stringify(userprefJSON));
+    const user = preferences[0];
+    const message = {
+      Id: user.Id,
+      DeskPref_A: user.DeskPref_A,
+      DeskPref_B: user.DeskPref_B,
+      DeskPref_C: user.DeskPref_C,
+      Presence: user.Presence,
+      Rec_System_Rating: user.Rec_System_Rating,
+    };
 
-    if (!userpref.length) {
-      return NextResponse.json({ success: false, error: "No preferences found for user" }, { status: 404 });
-    }
+    const scriptPath = path.join(process.cwd(), "scripts", "send_to_mqtt.py");
+    const safeJSONString = JSON.stringify(message).replace(/"/g, '\\"');
+    const command = `python "${scriptPath}" "${safeJSONString}"`;
 
-    const employeeId = userpref[0].user_id;
-    const deskPrefA = userpref[0].desk1;
-    const deskPrefB = userpref[0].desk2;
-    const deskPrefC = userpref[0].desk3;
-
-    if (!employeeId || !deskPrefA || !deskPrefB || !deskPrefC || !presence) {
-      return NextResponse.json({ success: false, error: "Missing required parameters" }, { status: 400 });
-    }
+    console.log("MQTT SEND → Running:", command);
 
     return new Promise((resolve) => {
-      const scriptPath = path.join(process.cwd(), "scripts", "send_to_mqtt.py");
-      const command = `python "${scriptPath}" "${employeeId}" "${deskPrefA}" "${deskPrefB}" "${deskPrefC}" "${presence}"`;
+      const child = exec(command, { encoding: "utf8" });
 
-      const childProcess = exec(command, { encoding: "utf8" });
+      let output = "", error = "";
 
-      let outputData = "";
-      let errorData = "";
+      child.stdout?.on("data", (data) => (output += data));
+      child.stderr?.on("data", (data) => (error += data));
 
-      if (childProcess.stdout) {
-        childProcess.stdout.on("data", (data) => {
-          outputData += data;
-        });
-      }
-
-      if (childProcess.stderr) {
-        childProcess.stderr.on("data", (data) => {
-          errorData += data;
-        });
-      }
-
-      childProcess.on("close", (code) => {
+      child.on("close", (code) => {
         if (code === 0) {
-          resolve(NextResponse.json({ success: true, output: outputData.trim() }));
+          console.log("MQTT SEND → Success:\n", output.trim());
+          resolve(NextResponse.json({ success: true }));
         } else {
-          resolve(NextResponse.json({ success: false, error: errorData.trim() }, { status: 500 }));
+          console.error("MQTT SEND → Failed:\n", error.trim());
+          resolve(NextResponse.json({ success: false, error: error.trim() || "Unknown error" }, { status: 500 }));
         }
       });
     });
   } catch (error) {
+    console.error("MQTT SEND → Exception:", error);
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }

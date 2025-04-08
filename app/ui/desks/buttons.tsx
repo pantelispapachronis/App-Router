@@ -12,12 +12,12 @@ export function DeskRecommendation() {
   const handleRecommendation = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/api/mqtt/send?presence=TRUE");
+      const response = await fetch("http://localhost:3000/api/mqtt/send");
       if (!response.ok) {
         const err = await response.text();
         throw new Error(`MQTT call failed: ${err}`);
       }
-      // Μετά το MQTT, κάνουμε redirect
+      // after MQTT call, redirect to recommendation page
       router.push("/dashboard/desks/recommendation");
     } catch (error) {
       console.error("Error sending MQTT data:", error);
