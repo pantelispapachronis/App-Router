@@ -5,15 +5,15 @@ import { preferences, users } from 'app/lib/placeholder-data';
 const client = await db.connect();
 
 // Delete all existing data before seeding
-async function clearDatabase() {
-  await client.sql` 
-  DROP TABLE IF EXISTS preferences CASCADE;
-  DROP TABLE IF EXISTS customers CASCADE;
-  DROP TABLE IF EXISTS invoices CASCADE;
-  DROP TABLE IF EXISTS revenue CASCADE;
-  `;
+// async function clearDatabase() {
+//   await client.sql` 
+//   DROP TABLE IF EXISTS preferences CASCADE;
+//   DROP TABLE IF EXISTS customers CASCADE;
+//   DROP TABLE IF EXISTS invoices CASCADE;
+//   DROP TABLE IF EXISTS revenue CASCADE;
+//   `;
 
-}
+// }
 
 
 // 🔹 Seed users into the database
@@ -28,6 +28,8 @@ async function seedUsers() {
     );
   `;
 
+  
+
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
@@ -41,6 +43,59 @@ async function seedUsers() {
 
   return insertedUsers;
 }
+
+async function seedEmployeesPreferences() {
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS EMPLOYEES_PREFERENCES (
+      "Id" VARCHAR(45) NOT NULL PRIMARY KEY,
+      "DeskPref_A" VARCHAR(45) NULL,
+      "DeskPref_B" VARCHAR(45) NULL,
+      "DeskPref_C" VARCHAR(45) NULL,
+      "Presence" BOOLEAN NOT NULL,
+      "Rec_System_Rating" SMALLINT CHECK("Rec_System_Rating" BETWEEN 0 AND 10)
+    );
+  `;
+
+  const employeePrefs = [
+    {
+      Id: '410544b2-4001-4271-9855-fec4b6a6442a',
+      DeskPref_A: '',
+      DeskPref_B: '',
+      DeskPref_C: '',
+      Presence: false,
+      Rec_System_Rating: 0,
+    },
+    {
+      Id: '412532b2-4001-4271-9855-fec4b6a6442a',
+      DeskPref_A: '',
+      DeskPref_B: '',
+      DeskPref_C: '',
+      Presence: false,
+      Rec_System_Rating: 0,
+    },
+  ];
+
+  const insertedEmployeePrefs = await Promise.all(
+    employeePrefs.map((pref) =>
+      client.sql`
+        INSERT INTO EMPLOYEES_PREFERENCES 
+        ("Id", "DeskPref_A", "DeskPref_B", "DeskPref_C", "Presence", "Rec_System_Rating")
+        VALUES (${pref.Id}, ${pref.DeskPref_A}, ${pref.DeskPref_B}, ${pref.DeskPref_C}, ${pref.Presence}, ${pref.Rec_System_Rating})
+        ON CONFLICT ("Id") DO UPDATE
+        SET "DeskPref_A" = EXCLUDED."DeskPref_A",
+            "DeskPref_B" = EXCLUDED."DeskPref_B",
+            "DeskPref_C" = EXCLUDED."DeskPref_C",
+            "Presence" = EXCLUDED."Presence",
+            "Rec_System_Rating" = EXCLUDED."Rec_System_Rating";
+      `
+    )
+  );
+
+  return insertedEmployeePrefs;
+}
+
+
+
 
 // 🔹 Seed preferences into the database
 async function seedPreferences() {
@@ -107,10 +162,11 @@ async function seedDesks() {
 export async function GET() {
   try {
     await client.sql`BEGIN`;
-    await clearDatabase(); // Clear existing data before seeding
+    // await clearDatabase(); // Clear existing data before seeding
     await seedUsers();
     await seedPreferences();
     await seedDesks();
+    await seedEmployeesPreferences();
     await client.sql`COMMIT`;
 
     return Response.json({ message: 'Database seeded successfully' });
