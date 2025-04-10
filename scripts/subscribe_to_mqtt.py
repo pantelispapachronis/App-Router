@@ -35,7 +35,7 @@ def on_connect(client, userdata, flags, rc):
 
     # To be removed test_data in production
     test_data = {
-    "employee_id": "A1020002",
+    "employee_id": "410544b2-4001-4271-9855-fec4b6a6442a",
     "status": "OK"
     }
 
