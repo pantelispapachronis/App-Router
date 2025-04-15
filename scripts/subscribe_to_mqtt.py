@@ -20,10 +20,10 @@ def on_message(client, userdata, message):
         if "status" in payload and "employee_id":
             status = payload["status"]
             employee_id = payload["employee_id"]
-            return True
-            #exit()
+            # return True
+            exit()
             # print(f"Status {status} for Employee {employee_id}")
-            #return payload
+            # return payload
         else:
             return False
     except json.JSONDecodeError:
@@ -34,13 +34,13 @@ def on_message(client, userdata, message):
 def on_connect(client, userdata, flags, rc):
 
     # To be removed test_data in production
-    test_data = {
-    "employee_id": "410544b2-4001-4271-9855-fec4b6a6442a",
-    "status": "OK"
-    }
+    # test_data = {
+    # "employee_id": "410544b2-4001-4271-9855-fec4b6a6442a",
+    # "status": "OK"
+    # }
 
     if rc == 0:
-        print(json.dumps(test_data))
+        # print(json.dumps(test_data))
 
         client.subscribe(MQTT_TOPIC)
     else:
@@ -54,11 +54,11 @@ def subscribe_to_mqtt():
     mqtt_client.on_message = on_message
 
     mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
-    # mqtt_client.loop_forever() Uncomment this in production to keep the client connected and listening for messages
+    mqtt_client.loop_forever() #Uncomment this in production to keep the client connected and listening for messages
 
     #Test loop_start - to be removed in production
-    mqtt_client.loop_start()
-    time.sleep(5)  
+    # mqtt_client.loop_start()
+    # time.sleep(5)  
 
 
 

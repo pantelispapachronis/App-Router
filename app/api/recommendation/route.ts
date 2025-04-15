@@ -4,7 +4,7 @@ export async function GET() {
 
     const baseUrl = "http://172.16.0.243:30676/ngsi-ld/v1/entities";
     const slots = [1, 2, 3];
-    const employeeId = "urn:Pilot5:Employee:A1020001:RankedRecommendation:Slot";
+    const employeeId = "urn:Pilot5:Employee:410544b2-4001-4271-9855-fec4b6a6442a:RankedRecommendation:Slot";
 
     try {
         const fetchPromises = slots.map(async (desk) => {

@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PlusIcon, ComputerDesktopIcon, XCircleIcon } from "@heroicons/react/24/outline";
-
+import {
+  PlusIcon,
+  ComputerDesktopIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 // 🔹 Desk Recommendation Button
 export function DeskRecommendation() {
@@ -42,10 +45,12 @@ export function DeskRecommendation() {
       });
       const subData = await subRes.json();
 
+      console.log("subData", subData);
+
       if (!subRes.ok) throw new Error("MQTT subscribe failed");
-      if (subData.employee_id !== userId || subData.status !== "OK") {
-        throw new Error("Invalid MQTT confirmation");
-      }
+      // if (subData.employee_id !== userId || subData.status !== "OK") {
+      //   throw new Error("Invalid MQTT confirmation");
+      // }
 
       // 3. Recommendation
       const recRes = await fetch("/api/recommendation");

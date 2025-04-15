@@ -38,26 +38,26 @@ export async function GET() {
 
     console.log("data", outputData);
 
-    // childProcess.on("close", (code) => {
-    //   if (code === 0) {
-    //     resolve(NextResponse.json({ success: true, output: outputData.trim() }));
-    //   } else {
-    //     resolve(NextResponse.json({ success: false, error: errorData.trim() || "Unknown error" }, { status: 500 }));
-    //   }
-    // }); uncomment these lines in production
-
     childProcess.on("close", (code) => {
       if (code === 0) {
-        try {
-          const parsedOutput = JSON.parse(outputData.trim());
-          resolve(NextResponse.json(parsedOutput)); // 👈 Εδώ το καθαρό JSON
-        } catch (e) {
-          resolve(NextResponse.json({ success: false, error: "Invalid JSON output from script" }, { status: 500 }));
-        }
+        resolve(NextResponse.json({ success: true, output: outputData.trim() }));
       } else {
         resolve(NextResponse.json({ success: false, error: errorData.trim() || "Unknown error" }, { status: 500 }));
       }
-    }); // Delete after the test
+    }); //uncomment these lines in production
+
+    // childProcess.on("close", (code) => {
+    //   if (code === 0) {
+    //     try {
+    //       const parsedOutput = JSON.parse(outputData.trim());
+    //       resolve(NextResponse.json(parsedOutput)); 
+    //     } catch (e) {
+    //       resolve(NextResponse.json({ success: false, error: "Invalid JSON output from script" }, { status: 500 }));
+    //     }
+    //   } else {
+    //     resolve(NextResponse.json({ success: false, error: errorData.trim() || "Unknown error" }, { status: 500 }));
+    //   }
+    // }); // Delete after the test
     
   });
 }
