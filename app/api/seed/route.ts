@@ -16,7 +16,7 @@ const client = await db.connect();
 // }
 
 
-// 🔹 Seed users into the database
+// Seed users into the database
 async function seedUsers() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
@@ -97,7 +97,7 @@ async function seedEmployeesPreferences() {
 
 
 
-// 🔹 Seed preferences into the database
+// Seed preferences into the database
 async function seedPreferences() {
   await client.sql`
     CREATE TABLE IF NOT EXISTS preferences (
@@ -122,7 +122,7 @@ async function seedPreferences() {
   return insertedPreferences;
 }
 
-// 🔹 Seed desks into the database
+// Seed desks into the database
 async function seedDesks() {
   await client.sql`
     CREATE TABLE IF NOT EXISTS desks (
@@ -133,24 +133,24 @@ async function seedDesks() {
 
   // Sample desk data
   const desks = [
-    { id: 'R105_01', is_available: true },
-    { id: 'R105_02', is_available: true },
-    { id: 'R106_01', is_available: true },
-    { id: 'R106_02', is_available: true },
-    { id: 'R208_01', is_available: true },
-    { id: 'R208_02', is_available: true },
-    { id: 'R208_03', is_available: true },
-    { id: 'R208_04', is_available: true },
-    { id: 'R209_01', is_available: true },
+    { Id: 'R105_01', Is_Available: true },
+    { Id: 'R105_02', Is_Available: true },
+    { Id: 'R106_01', Is_Available: true },
+    { Id: 'R106_02', Is_Available: true },
+    { Id: 'R208_01', Is_Available: true },
+    { Id: 'R208_02', Is_Available: true },
+    { Id: 'R208_03', Is_Available: true },
+    { Id: 'R208_04', Is_Available: true },
+    { Id: 'R209_01', Is_Available: true },
   ];
 
   const insertedDesks = await Promise.all(
     desks.map((desk) =>
       client.sql`
-        INSERT INTO desks (id, is_available)
-        VALUES (${desk.id}, ${desk.is_available})
-        ON CONFLICT (id) DO UPDATE
-        SET is_available = EXCLUDED.is_available;
+        INSERT INTO desks (Id, Is_Available)
+        VALUES (${desk.Id}, ${desk.Is_Available})
+        ON CONFLICT (Id) DO UPDATE
+        SET Is_Available = EXCLUDED.Is_Available;
       `
     )
   );
