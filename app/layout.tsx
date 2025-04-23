@@ -1,3 +1,5 @@
+export const dynamic = 'auto';
+
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { lusitana } from '@/app/ui/fonts';
 import Image from 'next/image';
 import { auth } from '@/auth';

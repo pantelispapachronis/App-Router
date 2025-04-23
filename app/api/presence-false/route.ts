@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db } from '@vercel/postgres';
+import { createClient } from '@vercel/postgres';
 import { auth } from '@/auth';
 
 export async function POST() {
@@ -10,7 +10,8 @@ export async function POST() {
     return NextResponse.json({ error: 'User ID not found' }, { status: 401 });
   }
 
-  const client = await db.connect();
+  const client = createClient();
+await client.connect();
 
   try {
     await client.sql`

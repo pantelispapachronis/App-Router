@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { db } from '@vercel/postgres';
+import { createClient } from '@vercel/postgres';
 
 // 🔹 GET: Fetches user preferences directly from the database
 export async function GET() {
-  const client = await db.connect();
+  const client = createClient();
+await client.connect();
   try {
     const result = await client.sql`
       SELECT preferences.user_id, users.name, preferences.desk1, preferences.desk2, preferences.desk3
@@ -30,7 +31,8 @@ export async function GET() {
 
 // 🔸 POST: Update user preferences in both tables
 export async function POST(request: Request) {
-  const client = await db.connect();
+  const client = createClient();
+await client.connect();
   try {
     const { user_id, desk1, desk2, desk3 } = await request.json();
 

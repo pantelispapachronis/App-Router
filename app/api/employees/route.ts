@@ -1,7 +1,8 @@
-import { db } from "@vercel/postgres";
+import { createClient } from "@vercel/postgres";
 
 export async function GET() {
-  const client = await db.connect();
+  const client = createClient();
+  await client.connect();
 
   try {
     const result = await client.sql`
@@ -11,7 +12,5 @@ export async function GET() {
     return Response.json(result.rows);
   } catch (error) {
     return Response.json({ error: (error as Error).message }, { status: 500 });
-  } finally {
-    client.release();
   }
 }
