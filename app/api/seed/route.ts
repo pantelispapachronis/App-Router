@@ -13,7 +13,7 @@ const connectionPool = mysql.createPool({
   queueLimit: 0,
 });
 
-// 🔹 Seed users into the database
+// Seed users into the database
 async function seedUsers() {
   const conn = await connectionPool.getConnection();
   await conn.query(`
@@ -98,7 +98,14 @@ async function seedEmployeesPreferences() {
   return insertedEmployeePrefs;
 }
 
+<<<<<<< HEAD
 // 🔹 Seed preferences into the database
+=======
+
+
+
+// Seed preferences into the database
+>>>>>>> f6745dac669552097811e21b87498043329f9eff
 async function seedPreferences() {
   const conn = await connectionPool.getConnection();
   await conn.query(`
@@ -133,7 +140,7 @@ async function seedPreferences() {
   return insertedPreferences;
 }
 
-// 🔹 Seed desks into the database
+// Seed desks into the database
 async function seedDesks() {
   const conn = await connectionPool.getConnection();
   await conn.query(`
@@ -145,25 +152,34 @@ async function seedDesks() {
 
   // Sample desk data
   const desks = [
-    { id: 'R105_01', is_available: true },
-    { id: 'R105_02', is_available: true },
-    { id: 'R106_01', is_available: true },
-    { id: 'R106_02', is_available: true },
-    { id: 'R208_01', is_available: true },
-    { id: 'R208_02', is_available: true },
-    { id: 'R208_03', is_available: true },
-    { id: 'R208_04', is_available: true },
-    { id: 'R209_01', is_available: true },
+    { Id: 'R105_01', Is_Available: true },
+    { Id: 'R105_02', Is_Available: true },
+    { Id: 'R106_01', Is_Available: true },
+    { Id: 'R106_02', Is_Available: true },
+    { Id: 'R208_01', Is_Available: true },
+    { Id: 'R208_02', Is_Available: true },
+    { Id: 'R208_03', Is_Available: true },
+    { Id: 'R208_04', Is_Available: true },
+    { Id: 'R209_01', Is_Available: true },
   ];
 
   const insertedDesks = await Promise.all(
     desks.map((desk) =>
+<<<<<<< HEAD
       conn.query(`
         INSERT INTO desks (id, is_available)
         VALUES (?, ?)
         ON DUPLICATE KEY UPDATE
           is_available = VALUES(is_available)
       `, [desk.id, desk.is_available])
+=======
+      client.sql`
+        INSERT INTO desks (Id, Is_Available)
+        VALUES (${desk.Id}, ${desk.Is_Available})
+        ON CONFLICT (Id) DO UPDATE
+        SET Is_Available = EXCLUDED.Is_Available;
+      `
+>>>>>>> f6745dac669552097811e21b87498043329f9eff
     )
   );
 

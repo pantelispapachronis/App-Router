@@ -1,149 +1,112 @@
-# App Router
+# aerOS Web App - Pilot 5
 
-## Overview
-
-This project is a web application built with Next.js, utilizing React Server Components, SQL for data fetching, and various optimization techniques to enhance performance and user experience.
-
-## Features
-- **App Router-Based Routing**: Implements the latest routing paradigm of Next.js.
-- **Server Components & Client Components**: Efficiently handle UI rendering and data fetching.
-- **Streaming & Suspense**: Optimize performance by rendering components progressively.
-- **Dynamic Routing**: Use route parameters and catch-all routes.
-- **Server Actions**: Perform server-side operations without an API layer.
-- **SEO Optimizations**: Built-in support for metadata, Open Graph tags, and structured data.
-- **API Routes (if needed)**: Supports API endpoints via Server Functions.
-- **Authentication**: Integration with NextAuth.js or any custom authentication solution.
-- **Deployment Ready**: Configured for Vercel, Docker, or any custom hosting service.
+**Smart Building Desk Recommendation Platform**  
+Developed for [aerOS Project](https://aeros-project.eu) by [INFOLYSiS](https://infolysis.gr)
 
 ---
 
-## Getting Started
+## 🏗 Project Overview
 
-### Prerequisites
+This application is a web-based interface for managing and recommending desk bookings in a smart building environment. It integrates presence tracking, user preferences, and MQTT-based communication with external recommender systems.
 
-- Node.js
-- pnpm (or npm/yarn)
+---
 
-### Installation
+## ✨ Features
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/pantelispapachronis/App-Router.git
-    cd project-name
-    ```
+- 🔐 **Authentication**: Secure login with NextAuth (credentials strategy)
+- 📡 **Real-time MQTT Integration**: Publishes and subscribes desk and user data via MQTT brokers
+- 🧠 **Desk Recommendation System**: Calls an external AI service to get the top-3 personalized desk suggestions
+- 🖥 **Admin Dashboard**: View desks, update preferences, manage availability
+- 🧾 **User Preferences**: Submit preferred desks, store per user in Postgres
+- 📈 **Custom UI**: Tailored dashboard with status indicators, dynamic components & responsiveness
 
-2. Install dependencies:
-    ```sh
-    pnpm install
-    ```
+---
 
-3. Create a `.env.local` file and add necessary variables:
-    ```
-    NEXT_PUBLIC_API_URL=https://api.example.com
-    DATABASE_URL=postgres://user:password@host:port/db
-    NEXTAUTH_SECRET=your-secret
-    ```
+## ⚙️ Tech Stack
 
-### Running the Development Server
+- **Framework**: [Next.js 14 (App Router)](https://nextjs.org)
+- **Auth**: [NextAuth.js](https://next-auth.js.org)
+- **Database**: [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
+- **MQTT Broker**: [Mosquitto](https://mosquitto.org)
+- **MQTT Client**: [`paho-mqtt`](https://pypi.org/project/paho-mqtt/) (Python)
+- **Styling**: TailwindCSS
+- **Icons**: Heroicons
+- **Linting**: ESLint, Prettier
+- **Types**: TypeScript
+- **UI Libraries**: React, use-debounce, clsx
 
-```sh
+---
+
+## 🗂 Folder Structure
+
+. ├── app/ # Main application logic │ ├── api/ # REST & MQTT routes │ ├── dashboard/ # Dashboard pages │ ├── login/ # Login page │ ├── ui/ # Reusable UI components │ └── layout.tsx # Root layout and metadata ├── public/ # Static assets (images, favicons) ├── scripts/ # Python scripts for MQTT send/subscribe ├── types/ # NextAuth session types ├── .env # Environment variables ├── next.config.js # Next.js config ├── tailwind.config.ts # TailwindCSS config ├── tsconfig.json # TypeScript config └── README.md # You are here!
+
+
+---
+
+## 🛠️ Setup & Run
+
+### **1. Clone the repo**
+
+```bash
+git clone https://github.com/your-org/aeros-webapp.git
+cd aeros-webapp
+```
+
+### **2. Install dependencies**
+```bash
+pnpm install
+```
+
+### **3. Configure environment**
+Create a .env file in the root directory with the following variables:
+```bash
+
+POSTGRES_URL=your_postgres_connection_string
+NEXTAUTH_SECRET=your_secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+### **4. Start the development server**
+```bash
 pnpm dev
 ```
+Open http://localhost:3000 in your browser.
 
-Open http://localhost:3000 with your browser to see the result.
 
----
+## 🧪 MQTT Scripts
 
-## Project Structure
+Python scripts for communicating with the MQTT broker are located in the 
+```bash
+scripts/
 ```
-project-name/
-│── app/                # App Router-based pages & layouts
-│   ├── layout.tsx      # Root layout
-│   ├── page.tsx        # Home page
-│   ├── about/          # Example nested route
-│   │   ├── page.tsx    # About page
-│   ├── dashboard/      # Protected dashboard route
-│   │   ├── layout.tsx  # Dashboard layout
-│   │   ├── page.tsx    # Dashboard page
-│   │   ├── customers/  # Customers page
-│   │   ├── invoices/   # Invoice-related pages
-│── components/         # Reusable UI components
-│   ├── Header.tsx      # Header component
-│   ├── Footer.tsx      # Footer component
-│   ├── Sidebar.tsx     # Sidebar component
-│── lib/                # Utility functions and helper methods
-│   ├── data.ts         # Functions for database fetching
-│── public/             # Static assets (images, icons, etc.)
-│── styles/             # Global and component styles
-│   ├── globals.css     # Global CSS styles
-│── middleware.ts       # Middleware for authentication and redirects
-│── next.config.ts      # Next.js configuration file
-│── tailwind.config.ts  # Tailwind CSS configuration file
-│── tsconfig.json       # TypeScript configuration file
-│── package.json        # Project dependencies
-│── README.md           # Documentation
+ directory:
+
+ ```bash
+send_to_mqtt.py
+send_to_mqtt_logout.py
+mqtt_desk_availability.py
+subscribe_to_mqtt.py
+```
+Install Python dependencies
+ ```bash
+pip install paho-mqtt
 ```
 
----
 
-## Routing in Next.js App Router
-### Static Pages
-- `app/page.tsx` → Renders at `/`
-- `app/about/page.tsx` → Renders at `/about`
+## 🚀 Deployment
 
-### Dynamic Routes
-- `app/products/[id]/page.tsx` → Accessible via `/products/:id`
-- `app/blog/[...slug]/page.tsx` → Catch-all route for `/blog/*`
+You can deploy this application on Vercel. Make sure to configure your environment variables via the Vercel dashboard.
 
-### Layouts & Nested Routing
-- `app/layout.tsx`: Defines root layout (applies to all pages)
-- `app/dashboard/layout.tsx`: Layout specific to `/dashboard`
+## 👥 Contributors
 
----
+Christos Sakkas — Lead Developer
 
-## Deployment
-### Deploy on Vercel (Recommended)
-```sh
-vercel
-```
-### Deploy with Docker
-Create a `Dockerfile`:
-```Dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY . .
-RUN pnpm install && pnpm build
-CMD ["pnpm", "start"]
-```
-Then build and run:
-```sh
-docker build -t project-name .
-docker run -p 3000:3000 project-name
-```
+Pantelis Papachronis — Project Architect
 
----
+INFOLYSiS Team — Project Management & Technical Oversight
 
-## Access Details
-**Email**: user@nextmail.com  
-**Password**: 123456
+## 📄 License
 
----
-
-## Contributing
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit your changes (`git commit -m 'Add some feature'`).
-5. Push to the branch (`git push origin feature-branch`).
-6. Open a pull request.
-
----
-
-## License
-This project is licensed under the MIT License.
-
----
-
-## Conclusion
-This project demonstrates the best practices of Next.js App Router. It is structured for scalability and optimized for performance. Feel free to contribute and improve it!
+MIT License — You are free to use, modify, and distribute this project.
 
