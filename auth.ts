@@ -4,15 +4,31 @@ import { authConfig } from './auth.config';
 import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
-import postgres from 'postgres';
+import mysql from 'mysql2/promise';
  
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+// MySQL connection pool
+const connectionPool = mysql.createPool({
+  host: '172.16.0.96', // update as needed
+  user: 'db_user', // update as needed
+  password: 'userPass!', // update as needed
+  database: 'app_db', // update as needed
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
  
 async function getUser(email: string): Promise<User | undefined> {
   try {
-    const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
-    console.log("Database user:", user[0]); // Log the user data from DB
-    return user[0];
+    const conn = await connectionPool.getConnection();
+    const [rows] = await conn.query<mysql.RowDataPacket[]>(
+      'SELECT * FROM users WHERE email = ?', 
+      [email]
+    );
+    conn.release();
+    
+    const user = rows[0] as User | undefined;
+    console.log("Database user:", user); // Log the user data from DB
+    return user;
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');

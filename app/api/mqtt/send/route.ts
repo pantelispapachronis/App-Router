@@ -13,11 +13,20 @@ export async function GET() {
 
     const user_id = session.user.id;
     const preferences = await fetchPreferences(user_id);
-    if (!preferences.length) {
+    // Ensure preferences is an array and the first element is an object
+    const preferencesArr = Array.isArray(preferences) ? preferences : [];
+    if (!preferencesArr.length || typeof preferencesArr[0] !== 'object') {
       return NextResponse.json({ success: false, error: "No preferences found" }, { status: 404 });
     }
 
-    const user = preferences[0];
+    const user = preferencesArr[0] as {
+      Id: string;
+      DeskPref_A: string;
+      DeskPref_B: string;
+      DeskPref_C: string;
+      Presence: boolean;
+      Rec_System_Rating: number;
+    };
     const message = {
       Id: user.Id,
       DeskPref_A: user.DeskPref_A,
