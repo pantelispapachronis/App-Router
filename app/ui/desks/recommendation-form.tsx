@@ -13,7 +13,6 @@ export default function Form() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // List of available desks
   const desks = [
     { id: "R105_01", is_available: true },
     { id: "R105_02", is_available: true },
@@ -26,10 +25,8 @@ export default function Form() {
     { id: "R209_01", is_available: true },
   ];
 
-  // Function to check if a desk option should be disabled
   const isDeskDisabled = (desk: string) => selectedDesks.includes(desk);
 
-  // Fetch user ID & preferences on mount
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -53,30 +50,31 @@ export default function Form() {
 
     const fetchPreferences = async () => {
       try {
-        const response = await fetch("/api/preferences");
+        const response = await fetch("/api/employees");
         const data = await response.json();
 
         if (response.ok) {
-          const userPreferences = data.find((user: any) => user.user_id === userId);
+          const userPreferences = data.find((user: any) => user.Id === userId);
           if (userPreferences) {
             setSelectedDesks([
-              userPreferences.preferences.desk1 || "",
-              userPreferences.preferences.desk2 || "",
-              userPreferences.preferences.desk3 || "",
+              userPreferences.DeskPref_A || "",
+              userPreferences.DeskPref_B || "",
+              userPreferences.DeskPref_C || "",
             ]);
           }
+        } else {
+          console.error("Failed to fetch employees preferences:", data);
         }
       } catch (error) {
-        console.error("Error fetching preferences:", error);
+        console.error("Error fetching employees preferences:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPreferences();
-  }, [userId]); // Run when userId changes
+  }, [userId]);
 
-  // Handle desk selection change
   const handleDeskChange = () => {
     if (desk1Ref.current && desk2Ref.current && desk3Ref.current) {
       setSelectedDesks([
@@ -87,7 +85,6 @@ export default function Form() {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -130,7 +127,6 @@ export default function Form() {
   return (
     <form onSubmit={handleSubmit}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Generate 3 Desk Selection Dropdowns */}
         {["desk1", "desk2", "desk3"].map((deskKey, index) => (
           <div key={deskKey} className="mb-4">
             <label htmlFor={deskKey} className="mb-2 block text-sm font-medium">
@@ -143,7 +139,7 @@ export default function Form() {
                 ref={index === 0 ? desk1Ref : index === 1 ? desk2Ref : desk3Ref}
                 className="peer block w-full cursor-pointer rounded-md border border-gray-300 py-2 pl-10 text-sm outline-2"
                 onChange={handleDeskChange}
-                defaultValue={selectedDesks[index]} // Set default value from API
+                defaultValue={selectedDesks[index]}
               >
                 <option value="">Select a desk</option>
                 {desks.map((desk) => (
@@ -162,7 +158,6 @@ export default function Form() {
         ))}
       </div>
 
-      {/* Buttons */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/desks"
