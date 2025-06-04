@@ -35,11 +35,15 @@ export function DeskRecommendation() {
 
     setLoading(true);
     try {
-      // 1. MQTT Send
+
+      // 1. Presence Update
+      await fetch("/api/presence-true", { method: "POST" });
+
+      // 2. MQTT Send
       const sendRes = await fetch("/api/mqtt/send");
       if (!sendRes.ok) throw new Error("MQTT send failed");
 
-      // 2. MQTT Subscribe - wait for OK
+      // 3. MQTT Subscribe - wait for OK
       const subRes = await fetch(`/api/mqtt/subscribe?employee_id=${userId}`, {
         cache: "no-store",
       });
@@ -52,11 +56,11 @@ export function DeskRecommendation() {
       //   throw new Error("Invalid MQTT confirmation");
       // }
 
-      // 3. Recommendation
+      // 4. Recommendation
       const recRes = await fetch("/api/recommendation");
       if (!recRes.ok) throw new Error("Recommendation failed");
 
-      // 4. Redirect
+      // 5. Redirect
       router.push("/dashboard/desks/recommendation");
     } catch (error: any) {
       console.error("Recommendation flow error:", error);
@@ -86,7 +90,7 @@ export function BookDesk({ id }: { id: string }) {
   const handleBooking = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/mqtt/desk", {
+      const response = await fetch("/api/desks/book", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ desk_id: id }),
