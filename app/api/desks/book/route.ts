@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
+import { auth } from '@/auth';
 
 const connectionPool = mysql.createPool({
   host: '172.16.0.96',
@@ -13,20 +14,36 @@ const connectionPool = mysql.createPool({
 
 export async function POST(req: Request) {
   try {
-    const { desk_id } = await req.json();
+    // Πάρε το session και userId
+    const session = await auth();
+    const userId = session?.user?.id;
+    if (!userId) {
+      return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
+    }
 
+    // Διάβασε το desk_id από το σώμα του POST
+    const { desk_id } = await req.json();
     if (!desk_id) {
       return NextResponse.json({ error: 'Desk ID is required' }, { status: 400 });
     }
 
     const conn = await connectionPool.getConnection();
-    const [result] = await conn.query(
-      `UPDATE BUILDING_DESKS SET Is_Available = false WHERE Id = ?`,
+
+    // Ενημέρωση BUILDING_DESKS
+    const [buildingResult] = await conn.query(
+      `UPDATE BUILDING_DESKS SET is_available = false WHERE id = ?`,
       [desk_id]
     );
+
+    // Ενημέρωση desks (is_available=false και user=userId)
+    const [desksResult] = await conn.query(
+      `UPDATE desks SET is_available = false, user = ? WHERE id = ?`,
+      [userId, desk_id]
+    );
+
     conn.release();
 
-    if ((result as any).affectedRows === 0) {
+    if ((buildingResult as any).affectedRows === 0 || (desksResult as any).affectedRows === 0) {
       return NextResponse.json({ error: 'Desk not found' }, { status: 404 });
     }
 

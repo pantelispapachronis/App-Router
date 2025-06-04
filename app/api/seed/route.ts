@@ -305,34 +305,39 @@ async function seedBuildingDesks() {
 // 🔹 Seed desks into the database
 async function seedDesks() {
   const conn = await connectionPool.getConnection();
+
+  // Drop old table if exists
+  await conn.query(`DROP TABLE IF EXISTS desks;`);
+
+  // Create new desks table with user field
   await conn.query(`
-    CREATE TABLE IF NOT EXISTS desks (
+    CREATE TABLE desks (
       id VARCHAR(45) NOT NULL PRIMARY KEY,
-      is_available BOOLEAN NOT NULL
+      is_available BOOLEAN NOT NULL,
+      user VARCHAR(255) NULL
     );
   `);
 
-    // Sample desk data
+  // Sample desk data with user empty
   const desks = [
-    { id: 'R105_01', is_available: true },
-    { id: 'R105_02', is_available: true },
-    { id: 'R106_01', is_available: true },
-    { id: 'R106_02', is_available: true },
-    { id: 'R208_01', is_available: true },
-    { id: 'R208_02', is_available: true },
-    { id: 'R208_03', is_available: true },
-    { id: 'R208_04', is_available: true },
-    { id: 'R209_01', is_available: true },
+    { id: 'R105_01', is_available: true, user: null },
+    { id: 'R105_02', is_available: true, user: null },
+    { id: 'R106_01', is_available: true, user: null },
+    { id: 'R106_02', is_available: true, user: null },
+    { id: 'R208_01', is_available: true, user: null },
+    { id: 'R208_02', is_available: true, user: null },
+    { id: 'R208_03', is_available: true, user: null },
+    { id: 'R208_04', is_available: true, user: null },
+    { id: 'R209_01', is_available: true, user: null },
   ];
 
+  // Insert data, no duplicates expected since we dropped table
   const insertedDesks = await Promise.all(
     desks.map((desk) =>
       conn.query(`
-        INSERT INTO desks (id, is_available)
-        VALUES (?, ?)
-        ON DUPLICATE KEY UPDATE
-          is_available = VALUES(is_available)
-      `, [desk.id, desk.is_available])
+        INSERT INTO desks (id, is_available, user)
+        VALUES (?, ?, ?)
+      `, [desk.id, desk.is_available, desk.user])
     )
   );
 

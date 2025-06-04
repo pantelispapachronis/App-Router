@@ -8,29 +8,23 @@ export default function PreferencesPage() {
   const router = useRouter();
 
   async function handlePresenceClick() {
-    const confirmResult = confirm('Are you sure you want to set your presence to false?');
-    if (!confirmResult) return;
+  const confirmResult = confirm("Are you sure you want to set your presence to false?");
+  if (!confirmResult) return;
 
-    try {
-      const res = await fetch('/api/presence-false', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error('Error setting presence:', errorData);
-        alert('Failed to set presence.');
-      } else {
-        alert('Presence set to false successfully.');
-      }
-    } catch (err) {
-      console.error('Request failed:', err);
-      alert('Error contacting server.');
+  try {
+    const res = await fetch('/api/presence-reset-desk', { method: 'POST' });
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error('Error resetting presence and desk:', errorData);
+      alert('Failed to reset presence and desk.');
+    } else {
+      alert('Presence set to false and desk reset successfully.');
     }
+  } catch (err) {
+    console.error('Request failed:', err);
+    alert('Error contacting server.');
   }
+}
 
   return (
     <div className="p-4">
