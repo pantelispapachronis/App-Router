@@ -1,41 +1,54 @@
-import { DeskPreference } from '@/app/ui/preferences/buttons'; //Changed!
+'use client';
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { lusitana } from '@/app/ui/fonts';
-//import { InvoicesTableSkeleton } from '@/app/ui/skeletons'; export the table skeleton of preferences
-//import { Suspense } from 'react'; 
-import { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Set preferences',
-};
- 
-export default async function Page(props: {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
-  const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = 1
+export default function PreferencesPage() {
+  const router = useRouter();
 
+  async function handlePresenceClick() {
+    const confirmResult = confirm('Are you sure you want to set your presence to false?');
+    if (!confirmResult) return;
+
+    try {
+      const res = await fetch('/api/presence-false', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('Error setting presence:', errorData);
+        alert('Failed to set presence.');
+      } else {
+        alert('Presence set to false successfully.');
+      }
+    } catch (err) {
+      console.error('Request failed:', err);
+      alert('Error contacting server.');
+    }
+  }
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Desk Preferences</h1>
+    <div className="p-4">
+      <h1 className={`${lusitana.className} mb-4 text-2xl`}>Settings</h1>
+      <div className="flex flex-row gap-4">
+        <Link
+          href="/dashboard/preferences/set"
+          className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        >
+          Set Desk Preference
+        </Link>
+        <button
+          onClick={handlePresenceClick}
+          className="inline-flex items-center rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+        >
+          Set Presence
+        </button>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        {/* Need to be checked - changed */}
-        <DeskPreference /> 
-      </div>
-      {/* Creates the table with preferences - i don' t want it here 
-       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
-      </Suspense>
-      <div className="mt-5 flex w-full justify-center">
-        <Pagination totalPages={totalPages} />
-      </div>*/}
     </div>
   );
 }
