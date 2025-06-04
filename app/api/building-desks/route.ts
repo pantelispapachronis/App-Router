@@ -14,7 +14,7 @@ const connectionPool = mysql.createPool({
 export async function GET() {
   const conn = await connectionPool.getConnection();
   try {
-    const [rows] = await conn.query('SELECT * FROM `DESKS`;');
+    const [rows] = await conn.query('SELECT * FROM `BUILDING_DESKS`;');
     conn.release();
     return NextResponse.json(rows);
   } catch (error) {

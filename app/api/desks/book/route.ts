@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
     const conn = await connectionPool.getConnection();
     const [result] = await conn.query(
-      `UPDATE desks SET is_available = false WHERE id = ?`,
+      `UPDATE BUILDING_DESKS SET Is_Available = false WHERE Id = ?`,
       [desk_id]
     );
     conn.release();

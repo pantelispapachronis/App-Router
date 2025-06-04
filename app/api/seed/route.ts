@@ -266,6 +266,42 @@ async function seedPreferences() {
   return insertedPreferences;
 }
 
+async function seedBuildingDesks() {
+  const conn = await connectionPool.getConnection();
+
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS BUILDING_DESKS (
+      id VARCHAR(45) NOT NULL PRIMARY KEY,
+      is_available BOOLEAN NOT NULL
+    );
+  `);
+  
+  // Sample desk data
+  const building_desks = [
+    { Id: 'R105_01', Is_Available: true },
+    { Id: 'R105_02', Is_Available: true },
+    { Id: 'R106_01', Is_Available: true },
+    { Id: 'R106_02', Is_Available: true },
+    { Id: 'R208_01', Is_Available: true },
+    { Id: 'R208_02', Is_Available: true },
+    { Id: 'R208_03', Is_Available: true },
+    { Id: 'R208_04', Is_Available: true },
+    { Id: 'R209_01', Is_Available: true },
+  ];
+  const insertedBuildingDesks = await Promise.all(
+    building_desks.map((desk) =>
+      conn.query(`
+        INSERT INTO BUILDING_DESKS (id, is_available)
+        VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE
+          is_available = VALUES(is_available)
+      `, [desk.Id, desk.Is_Available])
+    )
+  );
+  conn.release();
+  return insertedBuildingDesks;
+}
+
 // 🔹 Seed desks into the database
 async function seedDesks() {
   const conn = await connectionPool.getConnection();
@@ -276,7 +312,7 @@ async function seedDesks() {
     );
   `);
 
-  // Sample desk data
+    // Sample desk data
   const desks = [
     { id: 'R105_01', is_available: true },
     { id: 'R105_02', is_available: true },
@@ -311,6 +347,7 @@ export async function GET() {
     await seedPreferences();
     await seedDesks();
     await seedEmployeesPreferences();
+    await seedBuildingDesks();
 
     return new Response(JSON.stringify({ message: 'Database seeded successfully' }), {
       headers: { 'Content-Type': 'application/json' },
