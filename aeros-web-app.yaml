@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nextjs-app
+  namespace: web-gui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nextjs-app
+  template:
+    metadata:
+      labels:
+        app: my-nextjs-app
+    spec:
+      imagePullSecrets:
+        - name: aeros-common-deployments
+      containers:
+        - name: my-nextjs-app
+          #image: pantelispapachronis/aeros-nextjs-app
+          image: registry.gitlab.aeros-project.eu/aeros-public/common-deployments/web-gui-pilot5:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+

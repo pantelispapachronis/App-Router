@@ -28,23 +28,23 @@ export async function POST() {
       [userId]
     );
     const desksArray = deskRows as any[];
-    if (desksArray.length === 0) {
-      conn.release();
-      return NextResponse.json({ error: 'Desk for user not found' }, { status: 404 });
+
+    if (desksArray.length > 0) {
+      const deskId = desksArray[0].id;
+
+      // 2. Ενημέρωσε τον πίνακα desks
+      await conn.query(
+        `UPDATE desks SET is_available = true, user = NULL WHERE id = ?`,
+        [deskId]
+      );
+
+      // 3. Ενημέρωσε τον πίνακα building_desks
+      await conn.query(
+        `UPDATE BUILDING_DESKS SET is_available = true WHERE id = ?`,
+        [deskId]
+      );
     }
-    const deskId = desksArray[0].id;
-
-    // 2. Ενημέρωσε τον πίνακα desks
-    await conn.query(
-      `UPDATE desks SET is_available = true, user = NULL WHERE id = ?`,
-      [deskId]
-    );
-
-    // 3. Ενημέρωσε τον πίνακα building_desks
-    await conn.query(
-      `UPDATE BUILDING_DESKS SET is_available = true WHERE id = ?`,
-      [deskId]
-    );
+    // Αν δεν βρεθεί desk απλά προχωράμε
 
     // 4. Ενημέρωσε presence
     await conn.query(
