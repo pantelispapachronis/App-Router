@@ -29,9 +29,9 @@ export async function POST(req: Request) {
 
     const conn = await connectionPool.getConnection();
 
-    // Ενημέρωση BUILDING_DESKS
+    // Ενημέρωση DESKS
     const [buildingResult] = await conn.query(
-      `UPDATE BUILDING_DESKS SET is_available = false WHERE id = ?`,
+      `UPDATE DESKS SET is_available = false WHERE id = ?`,
       [desk_id]
     );
 

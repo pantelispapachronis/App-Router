@@ -24,10 +24,16 @@ if __name__ == "__main__":
 
     try:
         payload = json.loads(sys.argv[1])
-        if payload.get("Presence") is True:
-            send_to_mqtt(payload)
-        else:
-            print("Presence is False — message not sent.")
+        # print(payload.get("Presence"))
+        if payload.get("Presence") == 0:    
+            payload["Presence"] = "FALSE"
+        else:    
+            payload["Presence"] = "TRUE"
+        send_to_mqtt(payload)
+        # if payload.get("Presence") == 1:
+        #     send_to_mqtt(payload)
+        # else:
+        #     print("Presence is False — message not sent.")
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)

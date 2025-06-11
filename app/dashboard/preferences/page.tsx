@@ -12,19 +12,55 @@ export default function PreferencesPage() {
   if (!confirmResult) return;
 
   try {
+    // 🟢 1. ΠΡΩΤΑ φέρνουμε το desk_id
+    const deskRes = await fetch('/api/user/desk');
+    const deskData = await deskRes.json();
+    const deskId = deskData.desk_id;
+
+    // 🔴 2. ΚΑΝΟΥΜΕ reset παρουσία και desk
     const res = await fetch('/api/presence-reset-desk', { method: 'POST' });
     if (!res.ok) {
       const errorData = await res.json();
       console.error('Error resetting presence and desk:', errorData);
       alert('Failed to reset presence and desk.');
-    } else {
-      alert('Presence set to false and desk reset successfully.');
+      return;
     }
+
+    alert('Presence set to false and desk reset successfully.');
+
+    // 🟡 3. Στείλε MQTT presence = false
+    const mqttRes = await fetch('/api/mqtt/send');
+    if (!mqttRes.ok) {
+      const errorData = await mqttRes.json();
+      console.error('Error sending MQTT presence update:', errorData);
+      alert('⚠️ Failed to notify MQTT broker (presence).');
+    } else {
+      console.log('✅ MQTT presence FALSE sent');
+    }
+
+    // 🔵 4. Στείλε MQTT desk availability = true ΜΟΝΟ αν είχαμε desk
+    if (deskId) {
+      const availabilityRes = await fetch('/api/mqtt/desks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ desk_id: deskId }),
+      });
+
+      console.log("TEST - Availability: ", availabilityRes)
+      console.log("TEST - Availability status: ", availabilityRes.status)
+
+      const availabilityData = await availabilityRes.json();
+      console.log("✅ MQTT desk availability response:", availabilityData);
+    } else {
+      console.warn('⚠️ No desk found for user to mark available.');
+    }
+
   } catch (err) {
     console.error('Request failed:', err);
     alert('Error contacting server.');
   }
 }
+
 
   return (
     <div className="p-4">

@@ -40,7 +40,7 @@ export async function POST() {
 
       // 3. Ενημέρωσε τον πίνακα building_desks
       await conn.query(
-        `UPDATE BUILDING_DESKS SET is_available = true WHERE id = ?`,
+        `UPDATE DESKS SET is_available = true WHERE id = ?`,
         [deskId]
       );
     }

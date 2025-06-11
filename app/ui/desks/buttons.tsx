@@ -57,7 +57,7 @@ export function DeskRecommendation() {
       // }
 
       // 4. Recommendation
-      const recRes = await fetch("/api/recommendation");
+      const recRes = await fetch(`/api/recommendation?user=${userId}`);
       if (!recRes.ok) throw new Error("Recommendation failed");
 
       // 5. Redirect
@@ -88,28 +88,40 @@ export function BookDesk({ id }: { id: string }) {
   const router = useRouter();
 
   const handleBooking = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/desks/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ desk_id: id }),
-      });
+  setLoading(true);
+  try {
+    // 1. call API to book the desk
+    const response = await fetch("/api/desks/book", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ desk_id: id }),
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert("Desk booked successfully!");
-        router.push("/dashboard");
-      } else {
-        alert(`Error: ${data.error}`);
-      }
-    } catch (error) {
-      alert("Failed to book the desk.");
-      console.error("Booking error:", error);
-    } finally {
-      setLoading(false);
+    const data = await response.json();
+    if (!response.ok) {
+      alert(`Error: ${data.error}`);
+      return;
     }
-  };
+
+    // 2. send MQTT message to update desk status
+    await fetch("/api/mqtt/desk", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ desk_id: id }),
+    });
+
+    alert("Desk booked successfully!");
+    router.push("/dashboard");
+  } catch (error) {
+    alert("Failed to book the desk.");
+    console.error("Booking error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   return (
     <button

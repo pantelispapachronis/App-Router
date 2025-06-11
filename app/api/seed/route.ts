@@ -270,7 +270,7 @@ async function seedBuildingDesks() {
   const conn = await connectionPool.getConnection();
 
   await conn.query(`
-    CREATE TABLE IF NOT EXISTS BUILDING_DESKS (
+    CREATE TABLE IF NOT EXISTS DESKS (
       id VARCHAR(45) NOT NULL PRIMARY KEY,
       is_available BOOLEAN NOT NULL
     );
@@ -291,7 +291,7 @@ async function seedBuildingDesks() {
   const insertedBuildingDesks = await Promise.all(
     building_desks.map((desk) =>
       conn.query(`
-        INSERT INTO BUILDING_DESKS (id, is_available)
+        INSERT INTO DESKS (id, is_available)
         VALUES (?, ?)
         ON DUPLICATE KEY UPDATE
           is_available = VALUES(is_available)
