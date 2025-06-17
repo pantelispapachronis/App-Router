@@ -29,7 +29,7 @@ if __name__ == "__main__":
             payload["Presence"] = "FALSE"
         else:    
             payload["Presence"] = "TRUE"
-        send_to_mqtt(payload)
+        #send_to_mqtt(payload)
         # if payload.get("Presence") == 1:
         #     send_to_mqtt(payload)
         # else:

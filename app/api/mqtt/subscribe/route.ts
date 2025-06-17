@@ -13,7 +13,7 @@ export async function GET() {
     //const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8" });
 
     // Test timeout
-    const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8", timeout: 10000 }); // 10 seconds
+    const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8", timeout: 185000 }); // 3 minutes timeout
 
     console.log("Child process started:", childProcess.pid);
 

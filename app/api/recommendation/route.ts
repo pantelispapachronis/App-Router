@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
   }
 
-  const baseUrl = "http://172.16.0.243:30676/ngsi-ld/v1/entities";
+  const baseUrl = "http://172.16.0.65:13646/ngsi-ld/v1/entities";
   const slots = [1, 2, 3];
   const employeeId = `urn:Pilot5:Employee:${userId}:RankedRecommendation:Slot`;
 
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
       // Εμφάνισε το JSON απόκρισης για έλεγχο
       console.log(`📦 Data for slot ${desk}:`, JSON.stringify(data, null, 2));
 
-      const objectValue = data["http://purl.org/ontology/olo/core#item"].object;
+      const objectValue = data["http://www.w3.org/ns/org#item"].object;
       const extractedString = objectValue.split(":").pop();
 
       return { desk, object: extractedString };
