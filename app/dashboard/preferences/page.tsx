@@ -8,16 +8,16 @@ export default function PreferencesPage() {
   const router = useRouter();
 
   async function handlePresenceClick() {
-  const confirmResult = confirm("Are you sure you want to set your presence to false?");
+  const confirmResult = confirm("Are you sure you want to leave the room?");
   if (!confirmResult) return;
 
   try {
-    // 🟢 1. ΠΡΩΤΑ φέρνουμε το desk_id
+    // 1. Get the current desk ID
     const deskRes = await fetch('/api/user/desk');
     const deskData = await deskRes.json();
     const deskId = deskData.desk_id;
 
-    // 🔴 2. ΚΑΝΟΥΜΕ reset παρουσία και desk
+    // Reset the desk ID in local storage
     const res = await fetch('/api/presence-reset-desk', { method: 'POST' });
     if (!res.ok) {
       const errorData = await res.json();
@@ -26,9 +26,9 @@ export default function PreferencesPage() {
       return;
     }
 
-    alert('Presence set to false and desk reset successfully.');
+    alert('You left the room successfully.');
 
-    // 🟡 3. Στείλε MQTT presence = false
+    // 3. Set presence to false
     const mqttRes = await fetch('/api/mqtt/send');
     if (!mqttRes.ok) {
       const errorData = await mqttRes.json();
@@ -38,7 +38,7 @@ export default function PreferencesPage() {
       console.log('✅ MQTT presence FALSE sent');
     }
 
-    // 🔵 4. Στείλε MQTT desk availability = true ΜΟΝΟ αν είχαμε desk
+    // 4. Send MQTT desk availability
     if (deskId) {
       const availabilityRes = await fetch('/api/mqtt/desks', {
         method: 'POST',
@@ -76,7 +76,7 @@ export default function PreferencesPage() {
           onClick={handlePresenceClick}
           className="inline-flex items-center rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
         >
-          Set Presence
+          Leave Room
         </button>
       </div>
     </div>
