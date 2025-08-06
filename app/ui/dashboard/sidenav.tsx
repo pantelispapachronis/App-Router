@@ -19,26 +19,29 @@ export default function SideNav() {
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
         <form
-          action={async () => {
-            "use server";
-            console.log("STARTING SIGNOUT");
+  action={async () => {
+    "use server";
 
-            const session = await auth(); // Retrieve the user session
-            const userId = session?.user?.id; // Extract the user ID
+    const ts = () =>
+      new Date().toLocaleString("el-GR", { timeZone: "Europe/Athens" });
 
-            const response2 = await fetch(
-              `http://localhost:3000/api/mqtt/sendserver?presence=FALSE&userid=${userId}`
-            );
-            const data2 = await response2.json();
-            if (response2.ok) {
-              console.log("Presence FALSE updated successfully!");
-            } else {
-              console.log(`Error2: ${data2.message}`);
-            }
+    const session = await auth();
+    const userId = session?.user?.id;
 
-            await signOut({ redirectTo: "/" });
-          }}
-        >
+    const response2 = await fetch(
+      `http://localhost:3000/api/mqtt/sendserver?presence=FALSE&userid=${userId}`
+    );
+    const data2 = await response2.json();
+
+    console.log("\n────────────── User signed out ───────────────\n");
+    console.log(`[${ts()}]\n`);
+    console.log(`User ID: ${userId}`);
+    console.log("\n──────────────────────────────────────────────");
+
+    await signOut({ redirectTo: "/" });
+  }}
+>
+
           <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
             <PowerIcon className="w-6" />
             <div className="hidden md:block">Sign Out</div>

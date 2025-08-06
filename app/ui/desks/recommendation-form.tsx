@@ -6,6 +6,9 @@ import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 
 export default function Form() {
+  const getTimestamp = () =>
+  new Date().toLocaleString("en-EN", { timeZone: "Europe/Athens" });
+
   const [selectedDesks, setSelectedDesks] = useState<string[]>(["", "", ""]);
   const desk1Ref = useRef<HTMLSelectElement>(null);
   const desk2Ref = useRef<HTMLSelectElement>(null);
@@ -109,7 +112,11 @@ export default function Form() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Preferences updated successfully!");
+        console.log("\n────────────── Preferences Saved ──────────────\n");
+        console.log(`[${getTimestamp()}]\n`);
+        console.log(payload);
+        console.log("\n──────────────────────────────────────────────");
+
         alert("Preferences updated successfully!");
       } else {
         alert(`Error: ${data.message}`);

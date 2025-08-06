@@ -8,7 +8,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 
-// 🔹 Desk Recommendation Button
+// Desk Recommendation Button
 export function DeskRecommendation() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);

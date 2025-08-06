@@ -15,7 +15,7 @@ export async function GET() {
     // Test timeout
     const childProcess = exec(`python "${scriptPath}"`, { encoding: "utf8", timeout: 185000 }); // 3 minutes timeout
 
-    console.log("Child process started:", childProcess.pid);
+    // console.log("Child process started:", childProcess.pid);
 
     let outputData = "";
     let errorData = "";
@@ -28,7 +28,7 @@ export async function GET() {
       });
     }
 
-    console.log("data", outputData);
+    // console.log("data", outputData);
     // Check if stderr exists before using it
     if (childProcess.stderr) {
       childProcess.stderr.on("data", (data) => {
@@ -36,7 +36,6 @@ export async function GET() {
       });
     }
 
-    console.log("data", outputData);
 
     childProcess.on("close", (code) => {
       if (code === 0) {

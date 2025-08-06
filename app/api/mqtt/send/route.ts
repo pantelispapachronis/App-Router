@@ -40,7 +40,15 @@ export async function GET() {
     const safeJSONString = JSON.stringify(message).replace(/"/g, '\\"');
     const command = `python "${scriptPath}" "${safeJSONString}"`;
 
-    console.log("MQTT SEND → Running:", command);
+    //console.log("MQTT SEND → Running:", command);
+const ts = () => new Date().toLocaleString('en-EN', { timeZone: 'Europe/Athens' });
+
+console.log("\n──────────User's presence updated───────────────\n");
+console.log(`[${ts()}]\n`);
+console.log(`User ID: ${user.Id}`);
+console.log('Presence:', user.Presence);
+// console.log(message);
+console.log('────────────────────────────────────────────────\n');
 
     return new Promise((resolve) => {
       const child = exec(command, { encoding: "utf8" });
@@ -52,7 +60,7 @@ export async function GET() {
 
       child.on("close", (code) => {
         if (code === 0) {
-          console.log("MQTT SEND → Success:\n", output.trim());
+          //console.log("TEST: MQTT SEND → Success:\n", output.trim());
           resolve(NextResponse.json({ success: true }));
         } else {
           console.error("MQTT SEND → Failed:\n", error.trim());

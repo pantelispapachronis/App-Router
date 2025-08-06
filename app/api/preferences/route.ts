@@ -43,24 +43,40 @@ export async function POST(request: Request) {
   const conn = await connectionPool.getConnection();
   try {
     const { user_id, desk1, desk2, desk3 } = await request.json();
+
     if (!user_id || !desk1 || !desk2 || !desk3) {
       conn.release();
       return NextResponse.json({ message: 'Missing data' }, { status: 400 });
     }
+
     // Update legacy preferences table
     const [result]: any = await conn.query(
       `UPDATE preferences SET desk1 = ?, desk2 = ?, desk3 = ? WHERE user_id = ?`,
       [desk1, desk2, desk3, user_id]
     );
+
     // Update EMPLOYEES_PREFERENCES
     const [result2]: any = await conn.query(
       `UPDATE EMPLOYEES_PREFERENCES SET DeskPref_A = ?, DeskPref_B = ?, DeskPref_C = ? WHERE Id = ?`,
       [desk1, desk2, desk3, user_id]
     );
+
     conn.release();
+
     if ((result.affectedRows ?? 0) === 0 && (result2.affectedRows ?? 0) === 0) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
+
+    // Log με timestamp
+    const timestamp = new Date().toLocaleString('en-EN', { timeZone: 'Europe/Athens' });
+    console.log("\n────────────── Preferences Saved ─────────────\n");
+    console.log(`[${timestamp}]\n`);
+    console.log(`User ID: ${user_id}`);
+    console.log(`Option 1: ${desk1}`);
+    console.log(`Option 2: ${desk2}`);
+    console.log(`Option 3: ${desk3}`);
+    console.log("\n──────────────────────────────────────────────");
+
     return NextResponse.json({
       message: 'Preferences updated successfully',
       preferences: { desk1, desk2, desk3 },
