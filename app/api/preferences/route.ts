@@ -67,15 +67,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    // Log με timestamp
-    const timestamp = new Date().toLocaleString('en-EN', { timeZone: 'Europe/Athens' });
-    console.log("\n────────────── Preferences Saved ─────────────\n");
-    console.log(`[${timestamp}]\n`);
-    console.log(`User ID: ${user_id}`);
-    console.log(`Option 1: ${desk1}`);
-    console.log(`Option 2: ${desk2}`);
-    console.log(`Option 3: ${desk3}`);
-    console.log("\n──────────────────────────────────────────────");
+    const getTimestamp = () =>
+      `[${new Date().toISOString().replace("T", " ").replace("Z", "")}]`;
+
+    console.log(
+      `${getTimestamp()} Set preferences: User ID: ${user_id} Desk1:${desk1} Desk2:${desk2} Desk3:${desk3}`
+    );
 
     return NextResponse.json({
       message: 'Preferences updated successfully',

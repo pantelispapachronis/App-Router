@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  // console.log("TEST: GET /API/RECOMMENDATION REST CALL");
-
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("user");
-  
-
 
   if (!userId) {
     return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
@@ -15,15 +11,13 @@ export async function GET(request: Request) {
   const baseUrl = "http://172.16.0.65:13646/ngsi-ld/v1/entities";
   const slots = [1, 2, 3];
   const employeeId = `urn:Pilot5:Employee:${userId}:RankedRecommendation:Slot`;
-  const ts = () => new Date().toLocaleString('en-EN', { timeZone: 'Europe/Athens' });
-  console.log("\n────────────────────Fetching recommendations─────────────────────────\n");
-  console.log(`[${ts()}]\n`);
+
+  const getTimestamp = () =>
+    `[${new Date().toISOString().replace("T", " ").replace("Z", "")}]`;
+
   try {
-    const fetchPromises = slots.map(async (desk) => {
-      const url = `${baseUrl}/${employeeId}:${desk}`;
-      
-      
-      console.log(`➡️ Fetching: ${url}`);
+    const fetchPromises = slots.map(async (slot) => {
+      const url = `${baseUrl}/${employeeId}:${slot}`;
 
       const response = await fetch(url, {
         method: "GET",
@@ -31,28 +25,24 @@ export async function GET(request: Request) {
           Accept: "application/json",
         },
       });
-      // console.log('────────────────────────────────────────────────\n');
-
-      console.log(`⬅️ Response for desk ${desk}: ${response.status}`);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status} for desk ${desk}`);
+        throw new Error(`HTTP error! Status: ${response.status} for slot ${slot}`);
       }
 
       const data = await response.json();
-
-      // Show JSON data in a readable format
-      // console.log(`📦 Data for slot ${desk}:`, JSON.stringify(data, null, 2));
-
       const objectValue = data["http://www.w3.org/ns/org#item"].object;
-      const extractedString = objectValue.split(":").pop();
+      const extracted = objectValue.split(":").pop();
 
-      return { desk, object: extractedString };
+      return { slot, object: extracted };
     });
 
     const results = await Promise.all(fetchPromises);
 
-    console.log("✅ Final recommendations:", results);
+    const formatted = results
+      .map((r) => `rec${r.slot}:${r.object}`)
+      .join("  ");
+    console.log(`${getTimestamp()} Fetching recommendations from Orion-LD: ${formatted}`);
 
     return NextResponse.json({ recommendations: results });
   } catch (error) {

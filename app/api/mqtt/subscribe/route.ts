@@ -5,7 +5,7 @@ import path from "path";
 export async function GET() {
   return new Promise((resolve) => {
 
-    console.log("API /api/mqtt called at", new Date().toISOString());
+    // console.log("API /api/mqtt called at", new Date().toISOString());
     // Find the path of the Python script
     const scriptPath = path.join(process.cwd(), "scripts", "subscribe_to_mqtt.py");
 

@@ -22,8 +22,8 @@ export default function SideNav() {
   action={async () => {
     "use server";
 
-    const ts = () =>
-      new Date().toLocaleString("el-GR", { timeZone: "Europe/Athens" });
+    const getTimestamp = () =>
+      `[${new Date().toISOString().replace("T", " ").replace("Z", "")}]`;
 
     const session = await auth();
     const userId = session?.user?.id;
@@ -32,11 +32,7 @@ export default function SideNav() {
       `http://localhost:3000/api/mqtt/sendserver?presence=FALSE&userid=${userId}`
     );
     const data2 = await response2.json();
-
-    console.log("\n────────────── User signed out ───────────────\n");
-    console.log(`[${ts()}]\n`);
-    console.log(`User ID: ${userId}`);
-    console.log("\n──────────────────────────────────────────────");
+    console.log(`${getTimestamp()} User signed out: ${userId}`);
 
     await signOut({ redirectTo: "/" });
   }}

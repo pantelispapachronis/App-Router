@@ -13,18 +13,15 @@ export async function POST(req: NextRequest) {
 
         const scriptPath = path.join(process.cwd(), "scripts", "mqtt_desk_availability.py");
         const command = `python ${scriptPath} ${desk_id} false`;
-        const ts = () => new Date().toLocaleString('en-EN', { timeZone: 'Europe/Athens' });
-
+        const getTimestamp = () =>
+            `[${new Date().toISOString().replace("T", " ").replace("Z", "")}]`;
 
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error executing script: ${stderr}`);
                 return NextResponse.json({ error: 'Failed to send MQTT message' }, { status: 500 });
             }
-            console.log("\n────────────────────── Booking ───────────────────────────\n");
-            console.log(`[${ts()}]\n`);
-            console.log(`Script Output: ${stdout}`);
-            console.log('────────────────────────────────────────────────────────────\n');
+        console.log(`${getTimestamp()} Desk booked: ${desk_id}`);
         });
 
         return NextResponse.json({ message: 'Desk booking request sent' }, { status: 200 });

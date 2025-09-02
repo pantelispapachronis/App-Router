@@ -43,12 +43,12 @@ export async function GET() {
     //console.log("MQTT SEND → Running:", command);
 const ts = () => new Date().toLocaleString('en-EN', { timeZone: 'Europe/Athens' });
 
-console.log("\n──────────User's presence updated───────────────\n");
-console.log(`[${ts()}]\n`);
-console.log(`User ID: ${user.Id}`);
-console.log('Presence:', user.Presence);
-// console.log(message);
-console.log('────────────────────────────────────────────────\n');
+// console.log("\n──────────User's presence updated───────────────\n");
+// console.log(`[${ts()}]\n`);
+// console.log(`User ID: ${user.Id}`);
+// console.log('Presence:', user.Presence);
+// // console.log(message);
+// console.log('────────────────────────────────────────────────\n');
 
     return new Promise((resolve) => {
       const child = exec(command, { encoding: "utf8" });

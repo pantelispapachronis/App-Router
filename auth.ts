@@ -6,12 +6,12 @@ import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
 import mysql from 'mysql2/promise';
 
-// Helper για timestamped logs
-const ts = () =>
-  new Date().toLocaleString('en-EN', { timeZone: 'Europe/Athens' });
+// Helper for timestamped logs
+const getTimestamp = () =>
+  `[${new Date().toISOString().replace('T', ' ').replace('Z', '')}]`;
 
-const log = (...args: any[]) => console.log(`[${ts()}]`, ...args);
-const elog = (...args: any[]) => console.error(`[${ts()}]`, ...args);
+const log = (...args: any[]) => console.log(getTimestamp(), ...args);
+const elog = (...args: any[]) => console.error(getTimestamp(), ...args);
 
 // MySQL connection pool
 const connectionPool = mysql.createPool({
@@ -77,18 +77,8 @@ export const { auth, signIn, signOut } = NextAuth({
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (passwordsMatch) {
-          console.log('\n─────── User authenticated successfully ──────\n');
-          console.log(`[${ts()}]\n`);
-          console.log('Id:', user.id);
-          console.log('Name:', user.name);
-          console.log('Email:', user.email);
-          // console.log({
-          //   id: user.id,
-          //   name: user.name,
-          //   email: user.email,
-          // });
-          console.log('──────────────────────────────────────────────\n');
-
+       
+          console.log(`${getTimestamp()}  User login: ${user.id}`);
 
             return {
               id: user.id,
