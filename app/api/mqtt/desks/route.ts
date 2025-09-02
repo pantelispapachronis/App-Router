@@ -18,7 +18,7 @@ export async function POST(req: Request) {
           console.error(`❌ MQTT Error: ${stderr}`);
           resolve(NextResponse.json({ error: 'Failed to send MQTT message' }, { status: 500 }));
         } else {
-          console.log(`✅ MQTT Desk Available: ${stdout}`);
+          // console.log(`✅ MQTT Desk Available: ${stdout}`);
           resolve(NextResponse.json({ message: 'MQTT desk availability sent (true)' }, { status: 200 }));
         }
       });

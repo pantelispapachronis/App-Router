@@ -7,7 +7,7 @@ import { Button } from "@/app/ui/button";
 
 export default function Form() {
   const getTimestamp = () =>
-  new Date().toLocaleString("en-EN", { timeZone: "Europe/Athens" });
+  `[${new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString().replace("T", " ").replace("Z", "")}]`;
 
   const [selectedDesks, setSelectedDesks] = useState<string[]>(["", "", ""]);
   const desk1Ref = useRef<HTMLSelectElement>(null);

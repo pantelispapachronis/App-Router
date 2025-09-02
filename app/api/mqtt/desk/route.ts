@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         const scriptPath = path.join(process.cwd(), "scripts", "mqtt_desk_availability.py");
         const command = `python ${scriptPath} ${desk_id} false`;
         const getTimestamp = () =>
-            `[${new Date().toISOString().replace("T", " ").replace("Z", "")}]`;
+            `[${new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString().replace("T", " ").replace("Z", "")}]`;
 
         exec(command, (error, stdout, stderr) => {
             if (error) {

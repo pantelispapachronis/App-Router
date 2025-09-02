@@ -23,7 +23,7 @@ export default function SideNav() {
     "use server";
 
     const getTimestamp = () =>
-      `[${new Date().toISOString().replace("T", " ").replace("Z", "")}]`;
+      `[${new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString().replace("T", " ").replace("Z", "")}]`;
 
     const session = await auth();
     const userId = session?.user?.id;

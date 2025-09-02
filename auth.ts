@@ -8,7 +8,7 @@ import mysql from 'mysql2/promise';
 
 // Helper for timestamped logs
 const getTimestamp = () =>
-  `[${new Date().toISOString().replace('T', ' ').replace('Z', '')}]`;
+  `[${new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString().replace("T", " ").replace("Z", "")}]`;
 
 const log = (...args: any[]) => console.log(getTimestamp(), ...args);
 const elog = (...args: any[]) => console.error(getTimestamp(), ...args);

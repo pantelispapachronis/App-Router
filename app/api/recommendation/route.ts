@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+const loggedUsers = new Map<string, number>();
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("user");
@@ -13,7 +15,7 @@ export async function GET(request: Request) {
   const employeeId = `urn:Pilot5:Employee:${userId}:RankedRecommendation:Slot`;
 
   const getTimestamp = () =>
-    `[${new Date().toISOString().replace("T", " ").replace("Z", "")}]`;
+    `[${new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString().replace("T", " ").replace("Z", "")}]`;
 
   try {
     const fetchPromises = slots.map(async (slot) => {
@@ -42,8 +44,12 @@ export async function GET(request: Request) {
     const formatted = results
       .map((r) => `rec${r.slot}:${r.object}`)
       .join("  ");
-    console.log(`${getTimestamp()} Fetching recommendations from Orion-LD: ${formatted}`);
-
+    const now = Date.now();
+    const lastLoggedAt = loggedUsers.get(userId) ?? 0;
+    if (now - lastLoggedAt > 2000) {
+      console.log(`${getTimestamp()} Fetching recommendations from Orion-LD: ${formatted}`);
+      loggedUsers.set(userId, now);
+    }
     return NextResponse.json({ recommendations: results });
   } catch (error) {
     console.error("❌ Error fetching recommendations:", error);
