@@ -16,6 +16,12 @@ export async function POST() {
   const session = await auth();
   const userId = session?.user?.id;
 
+  const getTimestamp = () =>
+    `[${new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString().replace("T", " ").replace("Z", "")}]`;
+
+
+  console.log(`${getTimestamp()} Asking for recommendation...`);
+
   if (!userId) {
     return NextResponse.json({ error: 'User ID not found' }, { status: 401 });
   }
@@ -33,4 +39,6 @@ export async function POST() {
     console.error('Error updating presence:', error);
     return NextResponse.json({ error: 'Failed to update presence' }, { status: 500 });
   }
+
+  
 }

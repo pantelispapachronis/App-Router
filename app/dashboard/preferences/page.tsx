@@ -55,6 +55,8 @@ export default function PreferencesPage() {
       console.warn('⚠️ No desk found for user to mark available.');
     }
 
+    console.log('TEST: User has left the room and desk is now available.');
+
   } catch (err) {
     console.error('Request failed:', err);
     alert('Error contacting server.');
