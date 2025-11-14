@@ -3,11 +3,40 @@ import { lusitana } from '@/app/ui/fonts';
 import Image from 'next/image';
 import { auth } from '@/auth';
 import { UserIcon } from '@heroicons/react/24/solid';
+import mysql from 'mysql2/promise';
+
+
+const pool = mysql.createPool({
+  host: '172.16.0.96',
+  user: 'db_user',
+  password: 'userPass!',
+  database: 'app_db',
+});
 
 export default async function Page() {
   const session = await auth();
   const username = session?.user?.name || 'Guest';
   const userId = session?.user?.id || 'Not available';
+
+   let deskId: number | null = null;
+
+  try {
+    if (session?.user?.id) {
+      const conn = await pool.getConnection();
+      const [rows] = await conn.query(
+        `SELECT id FROM desks WHERE user = ? LIMIT 1`,
+        [session.user.id]
+      );
+      conn.release();
+
+      const typedRows = rows as any[];
+      if (typedRows.length > 0) {
+        deskId = typedRows[0].id as number;
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching user desk in overview page:', error);
+  }
 
   return (
     <main className="relative bg-gray-100 min-h-screen flex flex-col items-center justify-between">
@@ -20,6 +49,15 @@ export default async function Page() {
         <div className="text-gray-800 leading-tight">
           <p className="font-semibold text-sm">{username}</p>
           <p className="text-[10px] text-gray-500">{userId}</p>
+          {deskId !== null ? (
+            <p className="text-[10px] text-gray-500">
+              Booked desk: <span className="font-semibold">{deskId}</span>
+            </p>
+          ) : (
+            <p className="text-[10px] text-gray-400 italic">
+              No desk booked
+            </p>
+          )}
         </div>
       </header>
 

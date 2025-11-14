@@ -74,12 +74,12 @@ export default function PreferencesPage() {
         >
           Set Desk Preference
         </Link>
-        <button
+        {/* <button
           onClick={handlePresenceClick}
           className="inline-flex items-center rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
         >
           Leave Room
-        </button>
+        </button> */}
       </div>
     </div>
   );

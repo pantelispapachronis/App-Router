@@ -1,5 +1,5 @@
 
-import { DeskRecommendation } from '@/app/ui/desks/buttons';
+import { DeskRecommendation, LeaveRoomButton} from '@/app/ui/desks/buttons';
 import { lusitana } from '@/app/ui/fonts';
 
 import { Metadata } from 'next';
@@ -24,12 +24,15 @@ export default async function Page(props: {
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Desks</h1>
-      </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <DeskRecommendation />
-      </div>
+      <div className="mt-4 flex flex-col items-stretch gap-4 md:mt-8 md:flex-row md:items-center">
+  <div className="w-full md:w-auto flex justify-start">
+    <DeskRecommendation />
+  </div>
+  <div className="w-full md:w-auto flex justify-start">
+    <LeaveRoomButton />
+  </div>
+</div>
+      
       
        
     </div>
